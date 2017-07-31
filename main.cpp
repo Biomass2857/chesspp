@@ -3,12 +3,15 @@
 #include <SFML/Graphics.hpp>
 #include "ChessTextureReader.hpp"
 #include "ChessBoard.hpp"
+#include "util.hpp"
 
 using namespace std;
 using namespace sf;
 
 int main()
 {
+	States state = States::INGAME;
+
 	const Vector2u wSize = Vector2u(14 * 48, 14 * 48);
 	RenderWindow window(VideoMode(wSize.x, wSize.y, 32), "TextureReaderTest");
 	Event event;
