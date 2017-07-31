@@ -12,15 +12,14 @@ using namespace sf;
 class ChessTextureReader
 {
 	public:
-		
+
 		ChessTextureReader();
 		~ChessTextureReader();
-		
+
 		bool load(string);
-		
+
 		Texture& get(char, bool);
 		
-	protected:
 		vector<Texture> textures;
 };
 
