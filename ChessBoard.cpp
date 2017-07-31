@@ -19,9 +19,10 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 {
 	if(!texturePack.load(filename))
 		return false;
-
-	backgroundImage.create(8 * SSLEN, 8 * SSLEN, Color::White);
-
+	
+	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
+	boardImage.create(len * SSLEN, len * SSLEN, Color::Transparent);
+	
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
@@ -33,7 +34,9 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 	backgroundTexture.loadFromImage(backgroundImage);
 	backgroundSprite.setTexture(backgroundTexture);
 	backgroundSprite.setPosition(0, 0);
-	backgroundSprite.setScale((wSize.x / backgroundImage.getSize().x), (wSize.y / backgroundImage.getSize().y));
+	backgroundSprite.setScale(wSize.x / backgroundImage.getSize().x, wSize.y / backgroundImage.getSize().y);
+	
+	windSize = wSize;
 
 	return true;
 }
@@ -44,15 +47,35 @@ void ChessBoard::setField(char x, char y, char value)
 		board[x][y] = value;
 }
 
+void ChessBoard::handle()
+{
+	for(int dx = 0; dx < len; dx++)
+	{
+		for(int dy = 0; dy < len; dy++)
+		{
+			if(board[dx][dy] != 0)
+				boardImage.copy(texturePack.textures.at(board[dx][dy]).copyToImage(), dx * SSLEN, (len - dy - 1) * SSLEN);
+		}
+	}
+	
+	boardTexture.loadFromImage(boardImage);
+	boardSprite.setTexture(boardTexture);
+	boardSprite.setPosition(0, 0);
+	boardSprite.setScale(windSize.x / boardImage.getSize().x, windSize.y / boardImage.getSize().y);
+}
+
 void ChessBoard::render(RenderWindow *window)
 {
 	window->draw(backgroundSprite);
+	window->draw(boardSprite);
 }
 
 void ChessBoard::reset()
 {
-	for (unsigned char x = 0; x < 8; x++) {
-		for (unsigned char y = 0; y < 8; y++) {
+	for(unsigned char x = 0; x < 8; x++) 
+	{
+		for(unsigned char y = 0; y < 8; y++)
+		{
 			board[x][y] = 0;
 		}
 	}

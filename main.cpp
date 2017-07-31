@@ -2,7 +2,6 @@
 #include <strings.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
-
 #include "ChessTextureReader.hpp"
 #include "ChessBoard.hpp"
 #include "util.hpp"
@@ -22,6 +21,9 @@ int main()
 	
 	if(!chessBoard.loadGraphics(wSize, "img/spritesheet.png"))
 		return -1;
+		
+		
+	chessBoard.placePieces();
 
 	while(window.isOpen())
 	{
@@ -51,6 +53,7 @@ int main()
 			window.setSize(wSize);
 
 		
+		chessBoard.handle();
 		window.clear(Color::White);
 		chessBoard.render(&window);
 		window.display();

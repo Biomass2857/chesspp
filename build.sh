@@ -1,7 +1,7 @@
 #!/bin/bash
 # ver: 1.0.3 release
 
-filename=".exe"
+filename="chess.exe"
 useC=false
 useCPP=true
 cc_flags=""
@@ -13,7 +13,7 @@ lcpp_flags=""
 
 useSFML=true
 sfml_version="2.4.2"
-sfml_path="/home/siphalor/Documents/"
+sfml_path="/home/tom/Desktop/SFMLinstall/"
 csfml_flags=""
 lsfml_flags="-lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio -lsfml-network"
 
