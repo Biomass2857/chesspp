@@ -1,6 +1,8 @@
 #include <iostream>
 #include <strings.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
+
 #include "ChessTextureReader.hpp"
 #include "ChessBoard.hpp"
 #include "util.hpp"
@@ -38,8 +40,24 @@ int main()
 	{
 		while(window.pollEvent(event))
 		{
-			if(event.type == Event::Closed)
-				window.close();
+			switch (event.type)
+			{
+				case Event::EventType::Closed:
+					window.close();
+					break;
+				case Event::EventType::KeyPressed:
+
+					break;
+				case Event::EventType::KeyReleased:
+
+					break;
+				case Event::EventType::MouseButtonPressed:
+
+					break;
+				case Event::EventType::MouseButtonReleased:
+
+					break;
+			}
 		}
 
 		if(window.getSize().x != wSize.x || window.getSize().y != wSize.y)
