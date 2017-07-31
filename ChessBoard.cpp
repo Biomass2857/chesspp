@@ -20,13 +20,13 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 	if(!texturePack.load(filename))
 		return false;
 	
-	backgroundImage.create(8 * SSLEN, 8 * SSLEN, Color::White);
+	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
 	
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			backgroundImage.copy(texturePack.get('f', (dx + dy) % 2 == 0).copyToImage(), dx * SSLEN, dy * SSLEN);
+			backgroundImage.copy(texturePack.get('f', (dx + dy) % 2 == 1).copyToImage(), dx * SSLEN, dy * SSLEN);
 		}
 	}
 	
