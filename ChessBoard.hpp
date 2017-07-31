@@ -20,10 +20,14 @@ class ChessBoard
 		char getField(char, char);
 		void setField(char, char, char);
 
-		void handle();
+		void handle(Vector2i);
+		void handlePieces();
 		void render(RenderWindow*);
 
 		void dragPiece(char, char);
+		void dragPiece(Vector2u);
+
+		Vector2u getFieldForPosition(Vector2i);
 
 	protected:
 		const unsigned int len;
@@ -31,7 +35,7 @@ class ChessBoard
 
 		char dragPieceInitialPosition[2];
 		bool isDraggingPiece;
-		
+
 		Vector2u windSize;
 
 		Image backgroundImage;
@@ -40,6 +44,7 @@ class ChessBoard
 		Image boardImage;
 		Texture boardTexture;
 		Sprite boardSprite;
+		Sprite dragSprite;
 		ChessTextureReader texturePack;
 };
 

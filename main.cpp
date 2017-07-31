@@ -18,11 +18,11 @@ int main()
 	Event event;
 
 	ChessBoard chessBoard = ChessBoard();
-	
+
 	if(!chessBoard.loadGraphics(wSize, "img/spritesheet.png"))
 		return -1;
-		
-		
+
+
 	chessBoard.placePieces();
 
 	while(window.isOpen())
@@ -41,7 +41,11 @@ int main()
 
 					break;
 				case Event::EventType::MouseButtonPressed:
-
+					if(event.mouseButton.button == Mouse::Button::Left)
+					{
+						cout << "Left" << endl;
+						chessBoard.dragPiece(chessBoard.getFieldForPosition(Mouse::getPosition(window)));
+					}
 					break;
 				case Event::EventType::MouseButtonReleased:
 
@@ -52,8 +56,8 @@ int main()
 		if(window.getSize().x != wSize.x || window.getSize().y != wSize.y)
 			window.setSize(wSize);
 
-		
-		chessBoard.handle();
+
+		chessBoard.handle(Mouse::getPosition(window));
 		window.clear(Color::White);
 		chessBoard.render(&window);
 		window.display();
