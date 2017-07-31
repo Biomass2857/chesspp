@@ -13,6 +13,7 @@ class ChessBoard
 		~ChessBoard();
 		char getField(char x, char y);
 		void setField(char x, char y, char value);
+		void reset();
 
 	protected:
 		char board[8][8];
