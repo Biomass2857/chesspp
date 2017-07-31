@@ -2,6 +2,7 @@
 #include <strings.h>
 #include <SFML/Graphics.hpp>
 #include "ChessTextureReader.hpp"
+#include "ChessBoard.hpp"
 
 using namespace std;
 using namespace sf;
@@ -28,6 +29,8 @@ int main()
 		sprites[i].setPosition(i* 48, i * 48);
 	}
 
+	ChessBoard chessBoard;
+
 	while(window.isOpen())
 	{
 		while(window.pollEvent(event))
@@ -40,9 +43,17 @@ int main()
 			window.setSize(wSize);
 
 		window.clear(Color::White);
-		for(int i = 0; i < 14; i++)
+		for(char i = 0; i < 64; i++)
 		{
-			window.draw(sprites[i]);
+			char bg = i % 2 * 7 + i / 8 % 2;
+			sprites[bg].setPosition(i % 8 * 48, i / 8 * 48);
+			window.draw(sprites[bg]);
+			char piece = chessBoard.getField(i % 8, i / 8);
+			if(piece != 0)
+			{
+				sprites[piece].setPosition(i % 8 * 48, i / 8 * 48);
+				window.draw(sprites[piece]);
+			}
 		}
 		window.display();
 	}
