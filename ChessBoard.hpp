@@ -22,10 +22,13 @@ class ChessBoard
 
 		void render(RenderWindow*);
 
+		void dragPiece(char, char);
 
 	protected:
 		const unsigned int len;
 		char board[8][8];
+		char dragPieceInitialPosition[2];
+		bool isDraggingPiece;
 		Image backgroundImage;
 		Texture backgroundTexture;
 		Sprite backgroundSprite;

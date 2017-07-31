@@ -96,3 +96,10 @@ void ChessBoard::placePieces()
 	board[6][7] = 10;
 	board[7][7] = 9;
 }
+
+void ChessBoard::dragPiece(char x, char y)
+{
+	isDraggingPiece = true;
+	dragPieceInitialPosition[0] = x;
+	dragPieceInitialPosition[0] = y;
+}
