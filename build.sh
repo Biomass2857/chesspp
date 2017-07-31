@@ -1,7 +1,7 @@
 #!/bin/bash
 # ver: 1.0.3 release
 
-filename="exe"
+filename=".exe"
 useC=false
 useCPP=true
 cc_flags=""
