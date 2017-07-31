@@ -20,7 +20,6 @@ class ChessTextureReader
 		
 		Texture& get(char, bool);
 		
-	protected:
 		vector<Texture> textures;
 };
 
