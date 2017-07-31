@@ -63,8 +63,5 @@ Texture& ChessTextureReader::get(char selector, bool sw)
 	if(sw)
 		pos += 7;
 		
-	// Debug
-	pos = selector;
-		
 	return textures.at(pos);
 }
