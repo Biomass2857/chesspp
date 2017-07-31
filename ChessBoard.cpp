@@ -19,22 +19,22 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 {
 	if(!texturePack.load(filename))
 		return false;
-	
+
 	backgroundImage.create(8 * SSLEN, 8 * SSLEN, Color::White);
-	
+
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			backgroundImage.copy(texturePack.get('f', (dx + dy) % 2 == 0).copyToImage(), dx * SSLEN, dy * SSLEN);
+			backgroundImage.copy(texturePack.get('f', (dx + dy) % 2 == 1).copyToImage(), dx * SSLEN, dy * SSLEN);
 		}
 	}
-	
+
 	backgroundTexture.loadFromImage(backgroundImage);
 	backgroundSprite.setTexture(backgroundTexture);
 	backgroundSprite.setPosition(0, 0);
 	backgroundSprite.setScale((wSize.x / backgroundImage.getSize().x), (wSize.y / backgroundImage.getSize().y));
-	
+
 	return true;
 }
 
@@ -56,4 +56,43 @@ void ChessBoard::reset()
 			board[x][y] = 0;
 		}
 	}
+}
+
+void ChessBoard::placePieces()
+{
+	/*char board1[8][8] =
+	{
+		{ 2, 1, 0, 0, 0, 0, 8, 9 },
+		{ 3, 1, 0, 0, 0, 0, 8, 10 },
+		{ 4, 1, 0, 0, 0, 0, 8, 11 },
+		{ 5, 1, 0, 0, 0, 0, 8, 12 },
+		{ 6, 1, 0, 0, 0, 0, 8, 13 },
+		{ 4, 1, 0, 0, 0, 0, 8, 11 },
+		{ 3, 1, 0, 0, 0, 0, 8, 10 },
+		{ 2, 1, 0, 0, 0, 0, 8, 9 },
+	};*/
+
+	for(int dy = 0; dy < len; dy++)
+	{
+		board[dy][1] = 1;
+		board[dy][6] = 8;
+	}
+
+	board[0][0] = 2;
+	board[1][0] = 3;
+	board[2][0] = 4;
+	board[3][0] = 5;
+	board[4][0] = 6;
+	board[5][0] = 4;
+	board[6][0] = 3;
+	board[7][0] = 2;
+
+	board[0][7] = 9;
+	board[1][7] = 10;
+	board[2][7] = 11;
+	board[3][7] = 12;
+	board[4][7] = 13;
+	board[5][7] = 11;
+	board[6][7] = 10;
+	board[7][7] = 9;
 }

@@ -14,13 +14,14 @@ class ChessBoard
 		~ChessBoard();
 
 		bool loadGraphics(Vector2u, string);
+		void placePieces();
+		void reset();
 
 		char getField(char, char);
 		void setField(char, char, char);
 
 		void render(RenderWindow*);
 
-		void reset();
 
 	protected:
 		const unsigned int len;
