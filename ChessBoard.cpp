@@ -2,13 +2,7 @@
 
 ChessBoard::ChessBoard() : len(8)
 {
-	for(unsigned char x = 0; x < len; x++) 
-	{
-		for(unsigned char y = 0; y < len; y++) 
-		{
-			board[x][y] = 0;
-		}
-	}
+	reset();
 }
 
 ChessBoard::~ChessBoard() {}
@@ -53,4 +47,13 @@ void ChessBoard::setField(char x, char y, char value)
 void ChessBoard::render(RenderWindow *window)
 {
 	window->draw(backgroundSprite);
+}
+
+void ChessBoard::reset()
+{
+	for (unsigned char x = 0; x < 8; x++) {
+		for (unsigned char y = 0; y < 8; y++) {
+			board[x][y] = 0;
+		}
+	}
 }

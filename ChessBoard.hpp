@@ -12,6 +12,7 @@ class ChessBoard
 
 		ChessBoard();
 		~ChessBoard();
+<<<<<<< HEAD
 		
 		bool loadGraphics(Vector2u, string);
 		
@@ -19,6 +20,12 @@ class ChessBoard
 		void setField(char, char, char);
 		
 		void render(RenderWindow*);
+=======
+		char getField(char x, char y);
+		void setField(char x, char y, char value);
+		void reset();
+
+>>>>>>> c51a25264c695618f660c4460c5aa0578d16fc49
 	protected:
 		const unsigned int len;
 		char board[8][8];
