@@ -57,10 +57,18 @@ int main()
 		if(window.getSize().x != wSize.x || window.getSize().y != wSize.y)
 			window.setSize(wSize);
 
+		switch(state)
+		{
+			case States::MENU:
 
-		chessBoard.handle(Mouse::getPosition(window));
-		window.clear(Color::White);
-		chessBoard.render(&window);
+				break;
+			case States::INGAME:
+				chessBoard.handle(Mouse::getPosition(window));
+				window.clear(Color::White);
+				chessBoard.render(&window);
+				break;
+		}
+
 		window.display();
 	}
 
