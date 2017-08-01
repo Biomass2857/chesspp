@@ -42,8 +42,7 @@ class ChessBoard
 		bool isDraggingPiece;
 
 		char movePieceFromTo[2][2];
-		Int32 movePieceStartTime;
-		short movePiecePastTime;
+		Clock movePieceClock;
 		bool isMovingPiece;
 
 		Vector2u windSize;
