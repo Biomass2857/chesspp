@@ -40,6 +40,11 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 
 	handlePieces();
 
+	test.setTexture(texturePack.textures.at(9));
+	test.setScale(Vector2f(windSize.x / len / SSLEN, windSize.y / len / SSLEN));
+	test.setPosition(Vector2f(100, 100));
+	w = GUIWindow(test, windSize);
+
 	return true;
 }
 
@@ -116,6 +121,7 @@ void ChessBoard::render(RenderWindow *window)
 		window->draw(moveSprite);
 	if(isDraggingPiece)
 		window->draw(dragSprite);
+	w.render(window);
 }
 
 void ChessBoard::reset()
