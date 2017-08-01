@@ -1,19 +1,17 @@
 #include "ChessBoard.hpp"
 #include <iostream>
 
-ChessBoard::ChessBoard() : len(8)
+ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
 {
 	reset();
-	isMovingPiece = false;
-	isDraggingPiece = false;
 }
 
 ChessBoard::~ChessBoard() {}
 
-char ChessBoard::getField(char x, char y)
+char ChessBoard::getField(Vector2c pos)
 {
-	if(x < len && y < len && x >= 0 && y >= 0)
-		return board[x][y];
+	if(pos.x < len && pos.y < len && pos.x >= 0 && pos.y >= 0)
+		return board[pos.x][pos.y];
 	else
 		return 0;
 }
@@ -24,7 +22,6 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 		return false;
 
 	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
-	boardImage.create(len * SSLEN, len * SSLEN, Color::Transparent);
 
 	for(int dx = 0; dx < len; dx++)
 	{
@@ -46,19 +43,20 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 	return true;
 }
 
-void ChessBoard::setField(char x, char y, char value)
+void ChessBoard::setField(Vector2c pos, char value)
 {
-	if(x < len && y < len && x >= 0 && y >= 0)
-		board[x][y] = value;
+	if(pos.x < len && pos.y < len && pos.x >= 0 && pos.y >= 0)
+		board[pos.x][pos.y] = value;
 }
 
 void ChessBoard::handlePieces()
 {
+	boardImage.create(len * SSLEN, len * SSLEN, Color::Transparent);
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			if(board[dx][dy] != 0)
+			if(board[dx][dy] != 0 && !(isMovingPiece && dx == movePieceFrom.x && dy == movePieceFrom.y) && !(isDraggingPiece && dx == dragPieceInitialPosition.x && dy == dragPieceInitialPosition.y))
 				boardImage.copy(texturePack.textures.at(board[dx][dy]).copyToImage(), dx * SSLEN, (len - dy - 1) * SSLEN);
 		}
 	}
@@ -72,7 +70,7 @@ void ChessBoard::handlePieces()
 
 	if(isDraggingPiece)
 	{
-		piece = board[dragPieceInitialPosition[0]][dragPieceInitialPosition[1]];
+		piece = board[dragPieceInitialPosition.x][dragPieceInitialPosition.y];
 		dragSprite.setTexture(texturePack.textures.at(piece));
 		dragSprite.setScale(windSize.x / len / SSLEN, windSize.y / len / SSLEN);
 		dragSprite.setOrigin(SSLEN * 0.5, SSLEN * 0.5);
@@ -80,7 +78,7 @@ void ChessBoard::handlePieces()
 
 	if(isMovingPiece)
 	{
-		piece = board[movePieceFromTo[0][0]][movePieceFromTo[0][1]];
+		piece = board[movePieceFrom.x][movePieceFrom.y];
 		moveSprite.setTexture(texturePack.textures.at(piece));
 		moveSprite.setScale(windSize.x / len / SSLEN, windSize.y / len / SSLEN);
 	}
@@ -92,20 +90,20 @@ void ChessBoard::handle(Vector2i cursorPos)
 	{
 		dragSprite.setPosition(cursorPos.x, cursorPos.y);
 	}
-	
+
 	if(isMovingPiece)
 	{
 		if(movePieceClock.getElapsedTime().asMilliseconds() >= 1000)
 		{
-			std::cout << movePieceClock.getElapsedTime().asMilliseconds() << '\n';
 			isMovingPiece = false;
+			handlePieces();
 		}
 		else
 		{
 			short time = movePieceClock.getElapsedTime().asMilliseconds();
-			moveSprite.setPosition((movePieceFromTo[0][0] * 1000 - (movePieceFromTo[0][0] - movePieceFromTo[1][0]) * time) * windSize.x / len / 1000,
-			(len * 1000 - 1000 - (movePieceFromTo[0][1] * 1000 - (movePieceFromTo[0][1] - movePieceFromTo[1][1]) * time)) * windSize.y / len / 1000);
-			
+			moveSprite.setPosition((movePieceFrom.x * 1000 - (movePieceFrom.x - movePieceTo.x) * time) * windSize.x / len / 1000,
+			(len * 1000 - 1000 - (movePieceFrom.y * 1000 - (movePieceFrom.y - movePieceTo.y) * time)) * windSize.y / len / 1000);
+
 		}
 	}
 }
@@ -173,64 +171,55 @@ void ChessBoard::placePieces()
 
 void ChessBoard::dragPiece(Vector2u pos)
 {
-	dragPiece(char(pos.x), char(pos.y));
+	dragPiece(Vector2c(char(pos.x), char(pos.y)));
 }
 
-void ChessBoard::dragPiece(char x, char y)
+void ChessBoard::dragPiece(Vector2c pos)
 {
-	if(board[x][y] != 0 && board[x][y] != 7)
+	if(board[pos.x][pos.y] != 0 && board[pos.x][pos.y] != 7)
 	{
 		isDraggingPiece = true;
-		dragPieceInitialPosition[0] = x;
-		dragPieceInitialPosition[1] = y;
+		dragPieceInitialPosition.x = pos.x;
+		dragPieceInitialPosition.y = pos.y;
 		handlePieces();
 	}
 }
 
 void ChessBoard::dropPiece(Vector2u pos)
 {
-	dropPiece(char(pos.x), char(pos.y));
+	dropPiece(Vector2c(char(pos.x), char(pos.y)));
 }
 
-void ChessBoard::dropPiece(char x, char y)
+void ChessBoard::dropPiece(Vector2c pos)
 {
-	switch(board[dragPieceInitialPosition[0]][dragPieceInitialPosition[1]] % 8)
-	{
-		case 1: 	// PAWN
-			break;
-		case 2:		// ROOK
-			break;
-		case 3:		// KNIGHT
-			break;
-		case 4:		// BISHOP
-			break;
-		case 5:		// QUEEN
-			break;
-		case 6:		// KING
-			break;
-
-	}
-	movePiece(dragPieceInitialPosition[0], dragPieceInitialPosition[1], x, y);
+	movePiece(dragPieceInitialPosition, pos);
 	isDraggingPiece = false;
 }
 
 Vector2u ChessBoard::getFieldForPosition(Vector2i pos)
 {
-	if(pos.x < 0 || pos.y < 0 || pos.x >= windSize.x || pos.y >= windSize.y) 
+	if(pos.x < 0 || pos.y < 0 || pos.x >= windSize.x || pos.y >= windSize.y)
 	{
 		return Vector2u(0, 0);
 	}
 	return Vector2u(pos.x / (windSize.x / len), len - 1 - pos.y / (windSize.y / len));
 }
 
-void ChessBoard::movePiece(char x1, char y1, char x2, char y2)
+void ChessBoard::movePiece(Vector2c pos1, Vector2c pos2)
 {
-	std::cout << "Move" << '\n';
-	movePieceFromTo[0][0] = x1;
-	movePieceFromTo[0][1] = y1;
-	movePieceFromTo[1][0] = x2;
-	movePieceFromTo[1][1] = y2;
+	movePieceFrom = pos1;
+	movePieceTo = pos2;
 	movePieceClock.restart();
 	isMovingPiece = true;
 	handlePieces();
+}
+
+void ChessBoard::openGUI(char id)
+{
+	currentGUI = id;
+}
+
+void ChessBoard::closeGUI()
+{
+	currentGUI = 0;
 }

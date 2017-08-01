@@ -2,6 +2,7 @@
 #define CHESSBOARD_HPP
 #include <SFML/Graphics.hpp>
 #include "ChessTextureReader.hpp"
+#include "util.hpp"
 
 using namespace std;
 using namespace sf;
@@ -17,31 +18,35 @@ class ChessBoard
 		void placePieces();
 		void reset();
 
-		char getField(char, char);
-		void setField(char, char, char);
+		char getField(Vector2c);
+		void setField(Vector2c, char);
 
 		void handle(Vector2i);
 		void handlePieces();
 		void render(RenderWindow*);
 
-		void dragPiece(char, char);
+		void dragPiece(Vector2c);
 		void dragPiece(Vector2u);
 
-		void dropPiece(char, char);
+		void dropPiece(Vector2c);
 		void dropPiece(Vector2u);
 
-		void movePiece(char, char, char, char);
+		void movePiece(Vector2c, Vector2c);
 
 		Vector2u getFieldForPosition(Vector2i);
+
+		void openGUI(char);
+		void closeGUI();
 
 	protected:
 		const unsigned int len;
 		char board[8][8];
 
-		char dragPieceInitialPosition[2];
+		Vector2c dragPieceInitialPosition;
 		bool isDraggingPiece;
 
-		char movePieceFromTo[2][2];
+		Vector2c movePieceTo;
+		Vector2c movePieceFrom;
 		Clock movePieceClock;
 		bool isMovingPiece;
 
@@ -56,6 +61,8 @@ class ChessBoard
 		Sprite dragSprite;
 		Sprite moveSprite;
 		ChessTextureReader texturePack;
+
+		char currentGUI;
 };
 
 #endif
