@@ -34,7 +34,7 @@ class ChessBoard
 		char board[8][8];
 
 		char dragPieceInitialPosition[2];
-		bool isDraggingPiece;
+		b/ool isDraggingPiece;
 
 		Vector2u windSize;
 
