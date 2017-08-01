@@ -92,32 +92,21 @@ void ChessBoard::handle(Vector2i cursorPos)
 	{
 		dragSprite.setPosition(cursorPos.x, cursorPos.y);
 	}
-<<<<<<< HEAD
 	
 	if(isMovingPiece)
 	{
-		movePiecePastTime = Time().asMilliseconds() - movePieceStartTime;
-		if(movePiecePastTime >= 1000)
-=======
-	if(isMovingPiece){
 		if(movePieceClock.getElapsedTime().asMilliseconds() >= 1000)
->>>>>>> 9c6cbb1af9726b3f30596e09b932f14ccaceb578
 		{
 			std::cout << movePieceClock.getElapsedTime().asMilliseconds() << '\n';
 			isMovingPiece = false;
 		}
 		else
-<<<<<<< HEAD
-			moveSprite.setPosition((movePieceFromTo[0][0] - (movePieceFromTo[0][0]-movePieceFromTo[1][0]) * movePiecePastTime / 1000) * windSize.x / len,
-				(len - 1 - movePieceFromTo[0][1] + (movePieceFromTo[0][1] - movePieceFromTo[0][1]) * movePiecePastTime / 1000) * windSize.y / len);
-=======
 		{
 			short time = movePieceClock.getElapsedTime().asMilliseconds();
 			moveSprite.setPosition((movePieceFromTo[0][0] * 1000 - (movePieceFromTo[0][0] - movePieceFromTo[1][0]) * time) * windSize.x / len / 1000,
 			(len * 1000 - 1000 - (movePieceFromTo[0][1] * 1000 - (movePieceFromTo[0][1] - movePieceFromTo[1][1]) * time)) * windSize.y / len / 1000);
 			
 		}
->>>>>>> 9c6cbb1af9726b3f30596e09b932f14ccaceb578
 	}
 }
 

@@ -60,7 +60,7 @@ int main()
 		switch(state)
 		{
 			case States::MENU:
-
+				
 				break;
 			case States::INGAME:
 				chessBoard.handle(Mouse::getPosition(window));
