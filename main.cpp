@@ -14,12 +14,12 @@ int main()
 	States state = States::INGAME;
 
 	const Vector2u wSize = Vector2u(640, 640);
-	RenderWindow window(VideoMode(wSize.x, wSize.y, 32), "TextureReaderTest");
+	RenderWindow window(VideoMode(wSize.x, wSize.y, 32), "Chess++");
 	Event event;
 
 	ChessBoard chessBoard = ChessBoard();
 
-	if(!chessBoard.loadGraphics(wSize, "assets/spritesheet.png"))
+	if(!chessBoard.loadGraphics(wSize, "assets/pieces.png"))
 		return -1;
 
 
@@ -60,7 +60,7 @@ int main()
 		switch(state)
 		{
 			case States::MENU:
-				
+
 				break;
 			case States::INGAME:
 				chessBoard.handle(Mouse::getPosition(window));

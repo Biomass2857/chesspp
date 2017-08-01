@@ -194,22 +194,6 @@ void ChessBoard::dropPiece(Vector2u pos)
 
 void ChessBoard::dropPiece(Vector2c pos)
 {
-	switch(board[dragPieceInitialPosition.x][dragPieceInitialPosition.y] % 8)
-	{
-		case 1: 	// PAWN
-			break;
-		case 2:		// ROOK
-			break;
-		case 3:		// KNIGHT
-			break;
-		case 4:		// BISHOP
-			break;
-		case 5:		// QUEEN
-			break;
-		case 6:		// KING
-			break;
-
-	}
 	movePiece(dragPieceInitialPosition, pos);
 	isDraggingPiece = false;
 }
