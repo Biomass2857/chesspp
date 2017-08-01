@@ -41,6 +41,10 @@ class ChessBoard
 		void closeGUI();
 
 	protected:
+
+		Sprite test;
+		GUIWindow w;
+
 		const unsigned int len;
 		char board[8][8];
 
