@@ -44,41 +44,82 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 		switch(pieceID)
 		{
 			case 1: // Pawn
+				if(!col)
+				{
+					if(startPos.x == endPos.x)
+					{
+						if(endPos.y < startPos.y)
+							return false;
+						else if(endPos.y - startPos.y > 2)
+							return false;
+						else if(endPos.y - startPos.y == 2 && startPos.y != 1)
+							return false;
+						else if(brd[endPos.x][endPos.y] != 0)
+							return false;
+					}
+					else
+					{
+						if(abs(startPos.x - endPos.x) != 1 || abs(startPos.x - endPos.x) != 1)
+							return false;
+					}
+				}
+				else
+				{
+					if(startPos.x == endPos.x)
+					{
+						if(endPos.y > startPos.y)
+							return false;
+						else if(startPos.y - endPos.y > 2)
+							return false;
+						else if(startPos.y - endPos.y == 2 && startPos.y != 7)
+							return false;
+						else if(brd[endPos.x][endPos.y] != 0)
+							return false;
+					}
+					else
+					{
+						if(abs(startPos.x - endPos.x) != 1 || abs(startPos.x - endPos.x) != 1)
+							return false;
+					}
+				}
 				
+				if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
+				{
+					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+					brd[startPos.x][startPos.y] = 0;
+				}
+				else
+					return false;
 			break;
 			case 2: // Rook
-				if(abs(startPos.x - endPos.x) > 0 && startPos.y == endPos.y) // Move Horizontal
+				if(startPos.y == endPos.y) // Move Horizontal
 				{
 					for(int offsetX = 1; offsetX < abs(startPos.x - endPos.x); offsetX++)
 					{
 						if(startPos.x > endPos.x)
 						{
-							char check = brd[startPos.x - offsetX][startPos.y];
-							if(check != 0)
+							if(brd[startPos.x - offsetX][startPos.y] != 0)
 								return false;
 						}
 						else
 						{
-							char check = brd[endPos.x - offsetX][startPos.y];
-							if(check != 0)
+							if(brd[endPos.x - offsetX][startPos.y] != 0)
 								return false;
 						}
 					}
 				}
-				else if(abs(startPos.y - endPos.y) > 0 && abs(startPos.x - endPos.x) == 0) // Move Vertical
+				else if(startPos.x == endPos.x) // Move Vertical
 				{
 					for(int offsetY = 1; offsetY < abs(startPos.y - endPos.y); offsetY++)
 					{
 						if(startPos.x > endPos.x)
 						{
-							char check = brd[startPos.x][startPos.y - offsetY];
-							if(check != 0)
+							if(brd[startPos.x][startPos.y - offsetY] != 0)
 								return false;
 						}
 						else
 						{
-							char check = brd[startPos.x][endPos.y - offsetY];
-							if(check != 0)
+							if(brd[startPos.x][endPos.y - offsetY] != 0)
 								return false;
 						}
 					}
@@ -153,9 +194,86 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			break;
 			case 5: // Queen
 				if(abs(startPos.x - endPos.x) == abs(startPos.x - endPos.y))
+				{
+					if(endPos.x > startPos.x && endPos.y > startPos.y)
+					{
+						for(int offset = 1; offset < endPos.x - startPos.x; offset++)
+						{
+							if(brd[startPos.x + offset][startPos.y + offset] != 0)
+								return false;
+						}
+					}
+					else if(endPos.x > startPos.x && endPos.y < startPos.y)
+					{
+						for(int offset = 1; offset < endPos.x - startPos.x; offset++)
+						{
+							if(brd[startPos.x + offset][startPos.y - offset] != 0)
+								return false;
+						}
+					}
+					else if(endPos.x < startPos.x && endPos.y > startPos.y)
+					{
+						for(int offset = 1; offset < startPos.x - endPos.x; offset++)
+						{
+							if(brd[startPos.x - offset][startPos.y + offset] != 0)
+								return false;
+						}
+					}
+					else if(endPos.x < startPos.x && endPos.y < endPos.y)
+					{
+						for(int offset = 1; offset < startPos.x - endPos.x; offset++)
+						{
+							if(brd[startPos.x - offset][startPos.y - offset] != 0)
+								return false;
+						}
+					}
+				}
+				else if(startPos.x == endPos.x)
+				{
+					for(int offsetY = 1; offsetY < abs(startPos.y - endPos.y); offsetY++)
+					{
+						if(startPos.x > endPos.x)
+						{
+							if(brd[startPos.x][startPos.y - offsetY != 0)
+								return false;
+						}
+						else
+						{
+							if(brd[startPos.x][endPos.y - offsetY] != 0)
+								return false;
+						}
+					}
+				}
+				else if(startPos.y == endPos.y)
+				{
+					for(int offsetX = 1; offsetX < abs(startPos.x - endPos.x); offsetX++)
+					{
+						if(startPos.x > endPos.x)
+						{
+							if(brd[startPos.x - offsetX][startPos.y] != 0)
+								return false;
+						}
+						else
+						{
+							if(brd[endPos.x - offsetX][startPos.y] != 0)
+								return false;
+						}
+					}
+				}
+				else
+					return false;
+					
+				if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
+				{
+					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+					brd[startPos.x][startPos.y] = 0;
+				}
+				else
+					return false;
 			break;
 			case 6: // King
-				
+				if(abs(startPos.x - endPos.x) > 1 || abs(startPos.y - endPos.y) > 1)
+					return false;
 			break;
 			default:
 				return false;
@@ -170,5 +288,27 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 
 bool threatened(unsigned int len, char *board, bool col)
 {
+	Vector2c kingsPos = Vector2c(0, 0);
+	
+	char brd[len][len];
+	
+	for(size_t dx = 0; dx < len; dx++)
+	{
+		for(size_t dy = 0; dy < len; dy++)
+		{
+			brd[dx][dy] = *(board + dx * len + dy);
+			if(!col)
+			{
+				if(*(board + dx * len + dy) == 6)
+					kingsPos = Vectorc(dx, dy);
+			}
+			else
+			{
+				if(*(board + dx * len + dy) == 13)
+					kingsPos = Vectorc(dx, dy);
+			}
+		}
+	}
+	
 	
 }
