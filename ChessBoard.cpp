@@ -1,11 +1,9 @@
 #include "ChessBoard.hpp"
 #include <iostream>
 
-ChessBoard::ChessBoard() : len(8)
+ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
 {
 	reset();
-	isMovingPiece = false;
-	isDraggingPiece = false;
 }
 
 ChessBoard::~ChessBoard() {}
@@ -214,4 +212,14 @@ void ChessBoard::movePiece(Vector2c pos1, Vector2c pos2)
 	movePieceClock.restart();
 	isMovingPiece = true;
 	handlePieces();
+}
+
+void ChessBoard::openGUI(char id)
+{
+	currentGUI = id;
+}
+
+void ChessBoard::closeGUI()
+{
+	currentGUI = 0;
 }

@@ -35,6 +35,9 @@ class ChessBoard
 
 		Vector2u getFieldForPosition(Vector2i);
 
+		void openGUI(char);
+		void closeGUI();
+
 	protected:
 		const unsigned int len;
 		char board[8][8];
@@ -58,6 +61,8 @@ class ChessBoard
 		Sprite dragSprite;
 		Sprite moveSprite;
 		ChessTextureReader texturePack;
+
+		char currentGUI;
 };
 
 #endif
