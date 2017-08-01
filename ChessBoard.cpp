@@ -21,6 +21,9 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 	if(!texturePack.load(filename))
 		return false;
 
+	windSize = wSize;
+	loadGUI();
+
 	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
 
 	for(int dx = 0; dx < len; dx++)
@@ -36,16 +39,27 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 	backgroundSprite.setPosition(0, 0);
 	backgroundSprite.setScale(wSize.x / backgroundImage.getSize().x, wSize.y / backgroundImage.getSize().y);
 
-	windSize = wSize;
-
 	handlePieces();
 
-	test.setTexture(texturePack.textures.at(9));
-	test.setScale(Vector2f(windSize.x / len / SSLEN, windSize.y / len / SSLEN));
-	test.setPosition(Vector2f(100, 100));
-	w = GUIWindow(test, windSize);
 
 	return true;
+}
+
+void ChessBoard::loadGUI()
+{
+	pawnSpecialMoveImage.create(80, 16, Color::Transparent);
+	pawnSpecialMoveImage.copy(texturePack.textures.at(3).copyToImage(), 0, 0);
+	pawnSpecialMoveImage.copy(texturePack.textures.at(4).copyToImage(), 16, 0);
+	pawnSpecialMoveImage.copy(texturePack.textures.at(2).copyToImage(), 32, 0);
+	pawnSpecialMoveImage.copy(texturePack.textures.at(5).copyToImage(), 48, 0);
+	pawnSpecialMoveImage.copy(texturePack.textures.at(6).copyToImage(), 64, 0);
+	pawnSpecialMoveTexture.loadFromImage(pawnSpecialMoveImage);
+	pawnSpecialMoveSprite.setTexture(pawnSpecialMoveTexture);
+	pawnSpecialMoveSprite.setOrigin(40, 8);
+	pawnSpecialMoveSprite.setPosition(windSize.x * 0.5, windSize.y * 0.5);
+	pawnSpecialMoveSprite.setScale(windSize.x / len / SSLEN, windSize.y / len / SSLEN);
+	pawnSpecialMoveGUI = GUIWindow(pawnSpecialMoveSprite, windSize);
+	pawnSpecialMoveGUI.hide();
 }
 
 void ChessBoard::setField(Vector2c pos, char value)
@@ -121,7 +135,7 @@ void ChessBoard::render(RenderWindow *window)
 		window->draw(moveSprite);
 	if(isDraggingPiece)
 		window->draw(dragSprite);
-	w.render(window);
+	pawnSpecialMoveGUI.render(window);
 }
 
 void ChessBoard::reset()
@@ -198,8 +212,11 @@ void ChessBoard::dropPiece(Vector2u pos)
 
 void ChessBoard::dropPiece(Vector2c pos)
 {
-	movePiece(dragPieceInitialPosition, pos);
-	isDraggingPiece = false;
+	if(isDraggingPiece)
+	{
+		movePiece(dragPieceInitialPosition, pos);
+		isDraggingPiece = false;
+	}
 }
 
 Vector2u ChessBoard::getFieldForPosition(Vector2i pos)

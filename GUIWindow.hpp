@@ -11,13 +11,19 @@ class GUIWindow
 {
 	public:
 		GUIWindow();
-		GUIWindow(Sprite, Vector2u);
+		GUIWindow(Sprite, Vector2u, bool = false);
 		~GUIWindow();
+
+		void setCentered(bool);
 
 		void setSprite(Sprite);
 		Sprite getSprite();
 
 		void render(RenderWindow*);
+
+		void show();
+		void hide();
+		void toggle();
 
 	protected:
 		void recalculateSprites();
@@ -30,6 +36,8 @@ class GUIWindow
 		Sprite bgSprite;
 		Texture bgTexture;
 		Image bgImage;
+		bool isOpen;
+		bool isCentered;
 };
 
 #endif
