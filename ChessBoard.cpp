@@ -145,10 +145,10 @@ void ChessBoard::placePieces()
 		{ 2, 1, 0, 0, 0, 0, 8, 9 },len - 1
 	};*/
 
-	for(int dy = 0; dy < len; dy++)
+	for(int dx = 0; dx < len; dx++)
 	{
-		board[dy][1] = 1;
-		board[dy][6] = 8;
+		board[dx][1] = 1;
+		board[dx][6] = 8;
 	}
 
 	board[0][0] = 2;
