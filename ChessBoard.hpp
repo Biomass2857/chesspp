@@ -27,6 +27,11 @@ class ChessBoard
 		void dragPiece(char, char);
 		void dragPiece(Vector2u);
 
+		void dropPiece(char, char);
+		void dropPiece(Vector2u);
+
+		void movePiece(char, char, char, char);
+
 		Vector2u getFieldForPosition(Vector2i);
 
 	protected:
@@ -34,7 +39,12 @@ class ChessBoard
 		char board[8][8];
 
 		char dragPieceInitialPosition[2];
-		b/ool isDraggingPiece;
+		bool isDraggingPiece;
+
+		char movePieceFromTo[2][2];
+		int movePieceStartTime;
+		short movePiecePastTime;
+		bool isMovingPiece;
 
 		Vector2u windSize;
 
@@ -45,6 +55,7 @@ class ChessBoard
 		Texture boardTexture;
 		Sprite boardSprite;
 		Sprite dragSprite;
+		Sprite moveSprite;
 		ChessTextureReader texturePack;
 };
 
