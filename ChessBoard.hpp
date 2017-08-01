@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "ChessTextureReader.hpp"
 #include "util.hpp"
+#include "GUIWindow.hpp"
 
 using namespace std;
 using namespace sf;
@@ -39,6 +40,10 @@ class ChessBoard
 		void closeGUI();
 
 	protected:
+
+		Sprite test;
+		GUIWindow w;
+
 		const unsigned int len;
 		char board[8][8];
 

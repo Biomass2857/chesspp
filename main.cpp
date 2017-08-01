@@ -1,10 +1,11 @@
 #include <iostream>
 #include <strings.h>
 #include <SFML/Graphics.hpp>
-#include <SFML/Window/Event.hpp>
+//#include <SFML/Window/Event.hpp>
 #include "ChessTextureReader.hpp"
 #include "ChessBoard.hpp"
 #include "util.hpp"
+#include "GUIWindow.hpp"
 
 using namespace std;
 using namespace sf;
