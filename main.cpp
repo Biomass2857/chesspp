@@ -19,7 +19,7 @@ int main()
 
 	ChessBoard chessBoard = ChessBoard();
 
-	if(!chessBoard.loadGraphics(wSize, "img/spritesheet.png"))
+	if(!chessBoard.loadGraphics(wSize, "assets/spritesheet.png"))
 		return -1;
 
 

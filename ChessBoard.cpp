@@ -24,7 +24,6 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 		return false;
 
 	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
-	boardImage.create(len * SSLEN, len * SSLEN, Color::Transparent);
 
 	for(int dx = 0; dx < len; dx++)
 	{
@@ -54,11 +53,12 @@ void ChessBoard::setField(char x, char y, char value)
 
 void ChessBoard::handlePieces()
 {
+	boardImage.create(len * SSLEN, len * SSLEN, Color::Transparent);
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			if(board[dx][dy] != 0)
+			if(board[dx][dy] != 0 && !(isMovingPiece && dx == movePieceFromTo[0][0] && dy == movePieceFromTo[0][1]) && !(isDraggingPiece && dx == dragPieceInitialPosition[0] && dy == dragPieceInitialPosition[1]))
 				boardImage.copy(texturePack.textures.at(board[dx][dy]).copyToImage(), dx * SSLEN, (len - dy - 1) * SSLEN);
 		}
 	}
@@ -96,13 +96,14 @@ void ChessBoard::handle(Vector2i cursorPos)
 		{
 			std::cout << movePieceClock.getElapsedTime().asMilliseconds() << '\n';
 			isMovingPiece = false;
+			handlePieces();
 		}
 		else
 		{
 			short time = movePieceClock.getElapsedTime().asMilliseconds();
 			moveSprite.setPosition((movePieceFromTo[0][0] * 1000 - (movePieceFromTo[0][0] - movePieceFromTo[1][0]) * time) * windSize.x / len / 1000,
 			(len * 1000 - 1000 - (movePieceFromTo[0][1] * 1000 - (movePieceFromTo[0][1] - movePieceFromTo[1][1]) * time)) * windSize.y / len / 1000);
-			
+
 		}
 	}
 }
@@ -221,7 +222,6 @@ Vector2u ChessBoard::getFieldForPosition(Vector2i pos)
 
 void ChessBoard::movePiece(char x1, char y1, char x2, char y2)
 {
-	std::cout << "Move" << '\n';
 	movePieceFromTo[0][0] = x1;
 	movePieceFromTo[0][1] = y1;
 	movePieceFromTo[1][0] = x2;
