@@ -38,17 +38,18 @@ int main()
 
 					break;
 				case Event::EventType::KeyReleased:
-
 					break;
 				case Event::EventType::MouseButtonPressed:
-					if(event.mouseButton.button == Mouse::Button::Left)
+					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME)
 					{
-						cout << "Left" << endl;
 						chessBoard.dragPiece(chessBoard.getFieldForPosition(Mouse::getPosition(window)));
 					}
 					break;
 				case Event::EventType::MouseButtonReleased:
-
+					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME)
+					{
+						chessBoard.dropPiece(chessBoard.getFieldForPosition(Mouse::getPosition(window)));
+					}
 					break;
 			}
 		}
