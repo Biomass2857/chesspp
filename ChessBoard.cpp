@@ -70,7 +70,7 @@ void ChessBoard::handlePieces()
 
 	char piece;
 
-	if (isDraggingPiece)
+	if(isDraggingPiece)
 	{
 		piece = board[dragPieceInitialPosition[0]][dragPieceInitialPosition[1]];
 		dragSprite.setTexture(texturePack.textures.at(piece));
@@ -88,10 +88,13 @@ void ChessBoard::handlePieces()
 
 void ChessBoard::handle(Vector2i cursorPos)
 {
-	if(isDraggingPiece){
+	if(isDraggingPiece)
+	{
 		dragSprite.setPosition(cursorPos.x, cursorPos.y);
 	}
-	if(isMovingPiece){
+	
+	if(isMovingPiece)
+	{
 		if(movePieceClock.getElapsedTime().asMilliseconds() >= 1000)
 		{
 			std::cout << movePieceClock.getElapsedTime().asMilliseconds() << '\n';
@@ -214,8 +217,9 @@ void ChessBoard::dropPiece(char x, char y)
 
 Vector2u ChessBoard::getFieldForPosition(Vector2i pos)
 {
-	if (pos.x < 0 || pos.y < 0 || pos.x >= windSize.x || pos.y >= windSize.y) {
-		return Vector2u(len, len);
+	if(pos.x < 0 || pos.y < 0 || pos.x >= windSize.x || pos.y >= windSize.y) 
+	{
+		return Vector2u(0, 0);
 	}
 	return Vector2u(pos.x / (windSize.x / len), len - 1 - pos.y / (windSize.y / len));
 }
