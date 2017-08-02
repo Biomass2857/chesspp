@@ -12,10 +12,11 @@ class GUITextureReader
 		GUITextureReader();
 		~GUITextureReader();
 
-		static bool getWindowTextures(string, Texture*);
+		static Texture* getWindowTextures();
 
 	protected:
-
+		static bool windowTexturesLoaded;
+		static Texture windowTextures[10];
 };
 
 #endif

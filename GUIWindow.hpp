@@ -27,15 +27,11 @@ class GUIWindow
 
 	protected:
 		void recalculateSprites();
-		static Texture textures[9];
-		static bool texturesLoaded;
 		Sprite sprite;
 		Vector2f pos;
 		Sprite sprites[9];
 		Vector2u windSize;
 		Sprite bgSprite;
-		Texture bgTexture;
-		Image bgImage;
 		bool isOpen;
 		bool isCentered;
 };
