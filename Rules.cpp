@@ -12,6 +12,194 @@ bool History::whoHasToMoveNext()
 	return moves.size() % 2 != 0;
 }
 
+bool threatened(unsigned int len, char *board, bool col)
+{
+	Vector2c king = Vector2c(0, 0);
+	
+	char brd[len][len];
+	
+	for(size_t dx = 0; dx < len; dx++)
+	{
+		for(size_t dy = 0; dy < len; dy++)
+		{
+			brd[dx][dy] = *(board + dx * len + dy);
+			if(*(board + dx * len + dy) == 6 + col * 7)
+				king = Vector2c(dx, dy);
+		}
+	}
+	
+	// King
+	for(int offsetX = -1; offsetX < 2; offsetX++)
+	{
+		for(int offsetY = -1; offsetY < 2; offsetY++)
+		{
+			if(offsetX != 0 && offsetY != 0)
+			{
+				if(king.x + offsetX >= 0 && king.x + offsetX < len && king.y + offsetY >= 0 && king.y + offsetY < len)
+				{
+					if(brd[king.x + offsetX][king.y + offsetY] == 6 + 7 * !col)
+						return true;
+				}
+			}
+		}
+	}
+	
+	// Knight
+	if(king.x + 2 < len && king.y + 1 < len)
+	{
+		if(brd[king.x + 2][king.y + 1] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x + 2 < len && king.y - 1 >= 0)
+	{
+		if(brd[king.x + 2][king.y - 1] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x - 2 >= 0 && king.y + 1 < len)
+	{
+		if(brd[king.x - 2][king.y + 1] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x - 2 >= 0 && king.y - 1 >= 0)
+	{
+		if(brd[king.x - 2][king.y - 1] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x + 1 < len && king.y + 2 < len)
+	{
+		if(brd[king.x + 1][king.y + 2] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x + 1 < len && king.y - 2 >= 0)
+	{
+		if(brd[king.x + 1][king.y - 2] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x - 1 >= 0 && king.y + 2 < len)
+	{
+		if(brd[king.x - 1][king.y + 2] == 3 + col * 7)
+			return true;
+	}
+	
+	if(king.x - 1 >= 0 && king.y - 2 >= 0)
+	{
+		if(brd[king.x - 1][king.y - 2] == 3 + col * 7)
+			return true;
+	}
+	
+	// Pawn
+	if(!col)
+	{
+		if(king.x + 1 < len && king.y + 1 < len)
+		{
+			if(brd[king.x + 1][king.y + 1] == 8)
+				return true;
+		}
+		
+		if(king.x - 1 >= 0 && king.y + 1 < len)
+		{
+			if(brd[king.x - 1][king.y + 1] == 8)
+				return true;
+		}
+	}
+	else
+	{
+		if(king.x + 1 < len && king.y - 1 >= 0)
+		{
+			if(brd[king.x + 1][king.y - 1] == 1)
+				return true;
+		}
+		
+		if(king.x - 1 >= 0 && king.y - 1 >= 0)
+		{
+			if(brd[king.x - 1][king.y - 1] == 1)
+				return true;
+		}
+	}
+	
+	// Rook & partial queen
+	for(int dx = king.x + 1; dx < len; dx++)
+	{
+		if(brd[dx][king.y] != 0 && brd[dx][king.y] != 2 + 7 * !col && brd[dx][king.y] != 5 + 7 * !col)
+			break;
+		
+		if(brd[dx][king.y] == 2 + 7 * !col || brd[dx][king.y] == 5 + 7 * !col)
+			return true;
+	}
+	
+	for(int dx = king.x - 1; dx >= 0; dx--)
+	{
+		if(brd[dx][king.y] != 0 && brd[dx][king.y] != 2 + 7 * !col && brd[dx][king.y] != 5 + 7 * !col)
+			break;
+			
+		if(brd[dx][king.y] == 2 + 7 * !col || brd[dx][king.y] == 5 + 7 * !col)
+			return true;
+	}
+	
+	for(int dy = king.y + 1; dy < len; dy++)
+	{
+		if(brd[king.x][dy] != 0 && brd[king.x][dy] != 2 + 7 * !col && brd[king.x][dy] != 5 + 7 * !col)
+			break;
+			
+		if(brd[king.x][dy] == 2 + 7 * !col || brd[king.x][dy] == 5 + 7 * !col)
+			return true;
+	}
+	
+	for(int dy = king.y - 1; dy >= 0; dy--)
+	{
+		if(brd[king.x][dy] != 0 && brd[king.x][dy] != 2 + 7 * !col && brd[king.x][dy] != 5 + 7 * !col)
+			break;
+			
+		if(brd[king.x][dy] == 2 + 7 * !col || brd[king.x][dy] == 5 + 7 * !col)
+			return true;
+	}
+	
+	// Bishop & partial queen
+	for(int offset = 1; (king.x + offset < len) && (king.y + offset < len); offset++)
+	{
+		if(brd[king.x + offset][king.y + offset] != 0 && brd[king.x + offset][king.y + offset] != 4 + 7 * !col && brd[king.x + offset][king.y + offset] != 5 + 7 * !col)
+			break;
+		
+		if(brd[king.x + offset][king.y + offset] == 4 + 7 * !col || brd[king.x + offset][king.y + offset] == 5 + 7 * !col)
+			return true;
+	}
+	
+	for(int offset = 1; (king.x - offset >= 0) && (king.y + offset < len); offset++)
+	{
+		if(brd[king.x - offset][king.y + offset] != 0 && brd[king.x - offset][king.y + offset] != 4 + 7 * !col && brd[king.x - offset][king.y + offset] != 5 + 7 * !col)
+			break;
+		
+		if(brd[king.x - offset][king.y + offset] == 4 + 7 * !col || brd[king.x - offset][king.y + offset] == 5 + 7 * !col)
+			return true;
+	}
+	
+	for(int offset = 1; (king.x + offset < len) && (king.y - offset >= 0); offset++)
+	{
+		if(brd[king.x + offset][king.y - offset] != 0 && brd[king.x + offset][king.y - offset] != 4 + 7 * !col && brd[king.x + offset][king.y - offset] != 5 + 7 * !col)
+			break;
+			
+		if(brd[king.x + offset][king.y - offset] == 4 + 7 * !col || brd[king.x + offset][king.y - offset] == 5 + 7 * !col)
+			return true;
+	}
+	
+	for(int offset = 1; (king.x - offset >= len) && (king.y - offset >= len); offset++)
+	{
+		if(brd[king.x - offset][king.y - offset] != 0 && brd[king.x - offset][king.y - offset] != 4 + 7 * !col && brd[king.x - offset][king.y - offset] != 5 + 7 * !col)
+			break;
+		
+		if(brd[king.x - offset][king.y - offset] == 4 + 7 * !col || brd[king.x - offset][king.y - offset] == 5 + 7 * !col)
+			return true;
+	}
+	
+	return false;
+}
+
 bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History gameHistory)
 {
 	if(startPos == endPos)
@@ -234,7 +422,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 					{
 						if(startPos.x > endPos.x)
 						{
-							if(brd[startPos.x][startPos.y - offsetY != 0)
+							if(brd[startPos.x][startPos.y - offsetY] != 0)
 								return false;
 						}
 						else
@@ -279,40 +467,21 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				return false;
 			break;
 		}
+		
+		if(!threatened(len, &brd[0][0], col))
+		{
+			for(int dx = 0; dx < len; dx++)
+			{
+				for(int dy = 0; dy < len; dy++)
+				{
+					*(board + dx * len + dy) = brd[dx][dy];
+				}
+			}
+			return true;
+		}
+		else
+			return false;
 	}
 	else
 		return false;
-		
-	
-}
-
-bool threatened(unsigned int len, char *board, bool col)
-{
-	Vector2c king = Vector2c(0, 0);
-	
-	char brd[len][len];
-	
-	for(size_t dx = 0; dx < len; dx++)
-	{
-		for(size_t dy = 0; dy < len; dy++)
-		{
-			brd[dx][dy] = *(board + dx * len + dy);
-			if(!col)
-			{
-				if(*(board + dx * len + dy) == 6)
-					king = Vectorc(dx, dy);
-			}
-			else
-			{
-				if(*(board + dx * len + dy) == 13)
-					king = Vectorc(dx, dy);
-			}
-		}
-	}
-	
-	// Knight
-	if(king.x + 2 < len && king.y + 1 < len)
-	{
-		if(brd[king.x + 2][king.y + 1] == 
-	}
 }

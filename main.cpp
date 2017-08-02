@@ -37,7 +37,7 @@ int main()
 	{
 		while(window.pollEvent(event))
 		{
-			switch (event.type)
+			switch(event.type)
 			{
 				case Event::EventType::Closed:
 					window.close();

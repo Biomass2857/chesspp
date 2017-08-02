@@ -7,7 +7,7 @@ struct Move
 {
 	Vector2c start;
 	Vector2c end;
-	bool rochade;
+	bool castling;
 	unsigned char newPieceID;
 };
 
@@ -26,8 +26,8 @@ class History
 		unsigned int len;
 };
 
-bool moveIfPossible(unsigned int, char*, Vector2c, Vector2c, History);
-
 bool threatened(unsigned int, char*, bool);
+
+bool moveIfPossible(unsigned int, char*, Vector2c, Vector2c, History);
 
 #endif
