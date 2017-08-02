@@ -288,7 +288,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 
 bool threatened(unsigned int len, char *board, bool col)
 {
-	Vector2c kingsPos = Vector2c(0, 0);
+	Vector2c king = Vector2c(0, 0);
 	
 	char brd[len][len];
 	
@@ -300,15 +300,19 @@ bool threatened(unsigned int len, char *board, bool col)
 			if(!col)
 			{
 				if(*(board + dx * len + dy) == 6)
-					kingsPos = Vectorc(dx, dy);
+					king = Vectorc(dx, dy);
 			}
 			else
 			{
 				if(*(board + dx * len + dy) == 13)
-					kingsPos = Vectorc(dx, dy);
+					king = Vectorc(dx, dy);
 			}
 		}
 	}
 	
-	
+	// Knight
+	if(king.x + 2 < len && king.y + 1 < len)
+	{
+		if(brd[king.x + 2][king.y + 1] == 
+	}
 }
