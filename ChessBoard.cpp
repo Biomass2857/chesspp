@@ -4,7 +4,6 @@
 ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
 {
 	reset();
-	currentGUI = 1;
 }
 
 ChessBoard::~ChessBoard() {}
@@ -244,6 +243,7 @@ void ChessBoard::handleLeftClickPressed(Event event, RenderWindow* window)
 			dragPiece(getFieldForPosition(Mouse::getPosition(*window)));
 			break;
 		case 1:
+			promotionGUI.handleLeftClickPressed(window);
 			break;
 
 	}
@@ -257,6 +257,12 @@ void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
 			dropPiece(getFieldForPosition(Mouse::getPosition(*window)));
 			break;
 		case 1:
+			char promotedTo = promotionGUI.handleLeftClickReleased(window);
+			if(promotedTo != 0)
+			{
+				// Handle Promotion
+				currentGUI = 0;
+			}
 			break;
 
 	}

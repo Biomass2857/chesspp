@@ -26,3 +26,29 @@ void PromotionGUI::render(RenderWindow* window)
 	gWindow.render(window);
 
 }
+
+char PromotionGUI::getPieceForPosition(Vector2i mousePos, Vector2u windSize)
+{
+	if(mousePos.x >= windSize.x * 0.5 - 38 && mousePos.x <= windSize.x * 0.5 + 38 && mousePos.y >= windSize.y * 0.5 - 14 && mousePos.y <= windSize.y * 0.5 + 14)
+	{
+		if(mousePos.x < windSize.x * 0.5 - 22) return 3;
+		if(mousePos.x < windSize.x * 0.5 - 6) return 4;
+		if(mousePos.x < windSize.x * 0.5 + 6) return 2;
+		return 5;
+	}
+	return 0;
+}
+
+void PromotionGUI::handleLeftClickPressed(RenderWindow* window)
+{
+	clickPressPiece = getPieceForPosition(Mouse::getPosition(*window), window->getSize());
+}
+
+char PromotionGUI::handleLeftClickReleased(RenderWindow* window)
+{
+	if(clickPressPiece != 0)
+	{
+		return getPieceForPosition(Mouse::getPosition(*window), window->getSize());
+	}
+	return 0;
+}
