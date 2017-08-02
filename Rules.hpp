@@ -2,6 +2,10 @@
 #define RULES_HPP
 #include <vector>
 #include <cmath>
+#include "util.hpp"
+
+using namespace std;
+using namespace sf;
 
 struct Move
 {
@@ -18,9 +22,9 @@ class History
 	public:
 		History();
 		~History();
-		
+
 		bool whoHasToMoveNext();
-		
+
 	protected:
 		vector<Move> moves;
 		unsigned int len;

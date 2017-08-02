@@ -2,7 +2,7 @@
 
 History::History()
 {
-	
+
 }
 
 History::~History() {}
@@ -15,12 +15,12 @@ bool History::whoHasToMoveNext()
 bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History gameHistory)
 {
 	if(startPos == endPos)
-		return false;	
-	
+		return false;
+
 	char brd[len][len];
 	bool col = false;
 	unsigned int pieceID = 0;
-	
+
 	for(size_t dx = 0; dx < len; dx++)
 	{
 		for(size_t dy = 0; dy < len; dy++)
@@ -28,19 +28,19 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			brd[dx][dy] = *(board + dx * len + dy);
 		}
 	}
-	
+
 	if(startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
 	{
 		col = brd[startPos.x][startPos.y] > 7;
-		
+
 		if(col != gameHistory.whoHasToMoveNext())
 			return false;
-		
+
 		pieceID = brd[startPos.x][startPos.y];
-		
+
 		if(col)
 			pieceID -= 7;
-		
+
 		switch(pieceID)
 		{
 			case 1: // Pawn
@@ -82,7 +82,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 							return false;
 					}
 				}
-				
+
 				if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
 				{
 					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
@@ -126,7 +126,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				}
 				else
 					return false;
-					
+
 				if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
 				{
 					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
@@ -182,7 +182,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 								return false;
 						}
 					}
-					
+
 					if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
 					{
 						brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
@@ -234,7 +234,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 					{
 						if(startPos.x > endPos.x)
 						{
-							if(brd[startPos.x][startPos.y - offsetY != 0)
+							if(brd[startPos.x][startPos.y - offsetY] != 0)
 								return false;
 						}
 						else
@@ -262,7 +262,7 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				}
 				else
 					return false;
-					
+
 				if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
 				{
 					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
@@ -282,16 +282,16 @@ bool moveIfPossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 	}
 	else
 		return false;
-		
-	
+
+
 }
 
 bool threatened(unsigned int len, char *board, bool col)
 {
 	Vector2c king = Vector2c(0, 0);
-	
+
 	char brd[len][len];
-	
+
 	for(size_t dx = 0; dx < len; dx++)
 	{
 		for(size_t dy = 0; dy < len; dy++)
@@ -300,19 +300,19 @@ bool threatened(unsigned int len, char *board, bool col)
 			if(!col)
 			{
 				if(*(board + dx * len + dy) == 6)
-					king = Vectorc(dx, dy);
+					king = Vector2c(dx, dy);
 			}
 			else
 			{
 				if(*(board + dx * len + dy) == 13)
-					king = Vectorc(dx, dy);
+					king = Vector2c(dx, dy);
 			}
 		}
 	}
-	
+
 	// Knight
 	if(king.x + 2 < len && king.y + 1 < len)
 	{
-		if(brd[king.x + 2][king.y + 1] == 
+		//if(brd[king.x + 2][king.y + 1] ==
 	}
 }
