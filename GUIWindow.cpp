@@ -7,19 +7,14 @@ GUIWindow::GUIWindow() {}
 GUIWindow::GUIWindow(Sprite sprite_, Vector2u windS, bool center) : isOpen(false)
 {
 	windSize = windS;
-	if(!texturesLoaded)
-	{
-		GUITextureReader::getWindowTextures("assets/gui/window.png", textures);
-	}
+	Texture* textures = GUITextureReader::getWindowTextures();
 	for(char i = 0; i < 9; i++)
 	{
-		textures[i].setRepeated(true);
-		sprites[i].setTexture(textures[i]);
+		sprites[i].setTexture(*(textures + i));
 	}
-
-	bgTexture.loadFromFile("assets/gui/overlay.png");
+	Texture& bgTexture = *(textures + 9);
 	bgSprite.setTexture(bgTexture);
-	bgSprite.setScale(windSize.x / 32, windSize.y / 32);
+	bgSprite.setScale(windSize.x / bgTexture.getSize().x, windSize.y / bgTexture.getSize().y);
 	bgSprite.setPosition(0, 0);
 
 	setSprite(sprite_);
@@ -39,9 +34,6 @@ void GUIWindow::render(RenderWindow *w)
 		w->draw(getSprite());
 	}
 }
-
-bool GUIWindow::texturesLoaded = false;
-Texture GUIWindow::textures[9];
 
 void GUIWindow::setSprite(Sprite value)
 {
