@@ -12,7 +12,7 @@ class PromotionGUI
 {
 	public:
 		PromotionGUI();
-		PromotionGUI(ChessTextureReader*, bool, Vector2u);
+		void init(ChessTextureReader*, bool, Vector2u);
 		~PromotionGUI();
 		void render(RenderWindow*);
 

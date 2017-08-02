@@ -3,7 +3,7 @@
 
 PromotionGUI::PromotionGUI() {}
 
-PromotionGUI::PromotionGUI(ChessTextureReader* pieceTexturePack, bool color, Vector2u windSize)
+void PromotionGUI::init(ChessTextureReader* pieceTexturePack, bool color, Vector2u windSize)
 {
 	promotionImage.create(64, 16, Color::Transparent);
 	promotionImage.copy(pieceTexturePack->textures.at(3 + color * 7).copyToImage(), 0, 0);
@@ -15,17 +15,14 @@ PromotionGUI::PromotionGUI(ChessTextureReader* pieceTexturePack, bool color, Vec
 	promotionSprite.setOrigin(promotionImage.getSize().x / 2, promotionImage.getSize().y / 2);
 	promotionSprite.setPosition(windSize.x * 0.5, windSize.y * 0.5);
 	promotionSprite.setScale(windSize.x / RES, windSize.y / RES);
-	gWindow = GUIWindow(promotionSprite, windSize, true, true);
+	gWindow.init(promotionSprite, windSize, !color, true);
 	gWindow.show();
-	std::cout << &promotionTexture << '\n';
 }
 
 PromotionGUI::~PromotionGUI() {}
 
 void PromotionGUI::render(RenderWindow* window)
 {
-	std::cout << &promotionTexture << '\n';
-	std::cout << promotionSprite.getTexture() << '\n';
 	gWindow.render(window);
 
 }

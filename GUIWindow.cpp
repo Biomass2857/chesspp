@@ -3,8 +3,10 @@
 
 GUIWindow::GUIWindow() {}
 
-GUIWindow::GUIWindow(Sprite& sprite_, Vector2u windS, bool dark, bool center) : isOpen(false), isCentered(center)
+void GUIWindow::init(Sprite& sprite_, Vector2u windS, bool dark, bool center)
 {
+	isOpen = false;
+	isCentered = center;
 	std::cout << sprite_.getTexture() << '\n';
 	windSize = windS;
 	Texture* textures = GUITextureReader::getWindowTextures(dark);
