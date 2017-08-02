@@ -196,7 +196,7 @@ void ChessBoard::dragPiece(Vector2u pos)
 
 void ChessBoard::dragPiece(Vector2c pos)
 {
-	if(board[pos.x][pos.y] != 0 && board[pos.x][pos.y] != 7)
+	if(board[pos.x][pos.y] != 0)
 	{
 		isDraggingPiece = true;
 		dragPieceInitialPosition.x = pos.x;
@@ -214,7 +214,25 @@ void ChessBoard::dropPiece(Vector2c pos)
 {
 	if(isDraggingPiece)
 	{
-		movePiece(dragPieceInitialPosition, pos);
+		if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
+		{
+			movePiece(dragPieceInitialPosition, pos);
+			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history);
+			cout <<"Possible."<< endl;
+			
+			for(int dy = 0; dy < len; dy++)
+			{
+				for(int dx = 0; dx < len; dx++)
+				{
+					cout << (int) board[dx][dy] <<";";
+				}
+				cout << endl;
+			}
+			
+			cout << endl;
+		}
+		else
+			cout <<"This Move is not Possible"<< endl;
 		isDraggingPiece = false;
 	}
 }

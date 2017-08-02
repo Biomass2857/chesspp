@@ -1,10 +1,16 @@
 #ifndef RULES_HPP
 #define RULES_HPP
+#include <iostream>
 #include <vector>
 #include <cmath>
+#include "util.hpp"
+
+using namespace std;
+using namespace sf;
 
 struct Move
 {
+	Move() {}
 	Vector2c start;
 	Vector2c end;
 	bool castling;
@@ -21,6 +27,8 @@ class History
 		
 		bool whoHasToMoveNext();
 		
+		void inc();
+		
 	protected:
 		vector<Move> moves;
 		unsigned int len;
@@ -28,6 +36,8 @@ class History
 
 bool threatened(unsigned int, char*, bool);
 
-bool moveIfPossible(unsigned int, char*, Vector2c, Vector2c, History);
+bool isMovePossible(unsigned int, char*, Vector2c, Vector2c, History);
+
+void hardWriteToBoard(unsigned int, char*, Vector2c, Vector2c, History&);
 
 #endif

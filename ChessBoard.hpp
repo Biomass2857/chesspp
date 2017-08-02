@@ -2,6 +2,7 @@
 #define CHESSBOARD_HPP
 #include <SFML/Graphics.hpp>
 #include "ChessTextureReader.hpp"
+#include "Rules.hpp"
 #include "util.hpp"
 #include "GUIWindow.hpp"
 
@@ -47,6 +48,7 @@ class ChessBoard
 
 		const unsigned int len;
 		char board[8][8];
+		History history;
 
 		Vector2c dragPieceInitialPosition;
 		bool isDraggingPiece;
