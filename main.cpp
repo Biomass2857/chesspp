@@ -23,14 +23,6 @@ int main()
 	if(!chessBoard.loadGraphics(wSize, "assets/pieces.png"))
 		return -1;
 
-	Image image; Texture texture; Sprite sprite;
-	image.create(1, 1, sf::Color::Transparent);
-	texture.loadFromImage(image);
-	sprite.setTexture(texture);
-	sprite.setScale(64, 64);
-	sprite.setPosition(64, 64);
-	GUIWindow w(sprite, wSize);
-
 	chessBoard.placePieces();
 
 	while(window.isOpen())
@@ -76,7 +68,6 @@ int main()
 				chessBoard.render(&window);
 				break;
 		}
-		w.render(&window);
 
 		window.display();
 	}

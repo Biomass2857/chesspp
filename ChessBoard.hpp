@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "ChessTextureReader.hpp"
 #include "util.hpp"
-#include "GUIWindow.hpp"
+#include "PromotionGUI.hpp"
 
 using namespace std;
 using namespace sf;
@@ -16,7 +16,6 @@ class ChessBoard
 		~ChessBoard();
 
 		bool loadGraphics(Vector2u, string);
-		void loadGUI();
 		void placePieces();
 		void reset();
 
@@ -72,10 +71,7 @@ class ChessBoard
 
 		char currentGUI;
 
-		GUIWindow pawnSpecialMoveGUI;
-		Sprite pawnSpecialMoveSprite;
-		Texture pawnSpecialMoveTexture;
-		Image pawnSpecialMoveImage;
+		PromotionGUI promotionGUI;
 };
 
 #endif

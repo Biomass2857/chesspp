@@ -4,6 +4,7 @@
 ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
 {
 	reset();
+	currentGUI = 1;
 }
 
 ChessBoard::~ChessBoard() {}
@@ -22,7 +23,6 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 		return false;
 
 	windSize = wSize;
-	loadGUI();
 
 	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
 
@@ -41,24 +41,9 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 
 	handlePieces();
 
+	promotionGUI = PromotionGUI(&texturePack, true, windSize);
 
 	return true;
-}
-
-void ChessBoard::loadGUI()
-{
-	pawnSpecialMoveImage.create(64, 16, Color::Transparent);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(3).copyToImage(), 0, 0);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(4).copyToImage(), 16, 0);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(2).copyToImage(), 32, 0);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(5).copyToImage(), 48, 0);
-	pawnSpecialMoveTexture.loadFromImage(pawnSpecialMoveImage);
-	pawnSpecialMoveSprite.setTexture(pawnSpecialMoveTexture);
-	pawnSpecialMoveSprite.setOrigin(pawnSpecialMoveImage.getSize().x / 2, pawnSpecialMoveImage.getSize().y / 2);
-	pawnSpecialMoveSprite.setPosition(windSize.x * 0.5, windSize.y * 0.5);
-	pawnSpecialMoveSprite.setScale(windSize.x / len / SSLEN, windSize.y / len / SSLEN);
-	pawnSpecialMoveGUI = GUIWindow(pawnSpecialMoveSprite, windSize, true, true);
-	pawnSpecialMoveGUI.show();
 }
 
 void ChessBoard::setField(Vector2c pos, char value)
@@ -137,7 +122,7 @@ void ChessBoard::render(RenderWindow *window)
 	switch(currentGUI)
 	{
 		case 1:
-			pawnSpecialMoveGUI.render(window);
+			promotionGUI.render(window);
 			break;
 	}
 }
