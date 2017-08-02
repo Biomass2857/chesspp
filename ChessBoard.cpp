@@ -250,3 +250,13 @@ void ChessBoard::closeGUI()
 {
 	currentGUI = 0;
 }
+
+void ChessBoard::handleLeftClickPressed(Event event, RenderWindow* window)
+{
+	dragPiece(getFieldForPosition(Mouse::getPosition(*window)));
+}
+
+void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
+{
+	dropPiece(getFieldForPosition(Mouse::getPosition(*window)));
+}
