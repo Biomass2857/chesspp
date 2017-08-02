@@ -2,7 +2,7 @@
 
 History::History()
 {
-	
+
 }
 
 History::~History() {}
@@ -208,12 +208,12 @@ bool threatened(unsigned int len, char *board, bool col)
 bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History gameHistory)
 {
 	if(startPos == endPos)
-		return false;	
-	
+		return false;
+
 	char brd[len][len];
 	bool col = false;
 	unsigned int pieceID = 0;
-	
+
 	for(size_t dx = 0; dx < len; dx++)
 	{
 		for(size_t dy = 0; dy < len; dy++)
@@ -221,24 +221,22 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			brd[dx][dy] = *(board + dx * len + dy);
 		}
 	}
-	
-	
+
 	if(startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
 	{
 		col = brd[startPos.x][startPos.y] > 7;
-		
+
 		if(col != gameHistory.whoHasToMoveNext())
 		{
 			if(gameHistory.whoHasToMoveNext()) cout << "Schwarz ist am zug" << endl; else cout << "Weiß ist am zug" << endl;
 			
 			return false;	
 		}
-	
 		pieceID = brd[startPos.x][startPos.y];
-		
+
 		if(col)
 			pieceID -= 7;
-		
+
 		switch(pieceID)
 		{
 			case 1: // Pawn
@@ -420,7 +418,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				else
 				{
 					cout <<"Der Läufer kann nur schräg ziehen"<< endl;
-					return false;	
+					return false;
 				}
 			break;
 			case 5: // Queen

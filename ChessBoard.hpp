@@ -30,7 +30,6 @@ class ChessBoard
 
 		void dragPiece(Vector2c);
 		void dragPiece(Vector2u);
-
 		void dropPiece(Vector2c);
 		void dropPiece(Vector2u);
 
@@ -40,6 +39,9 @@ class ChessBoard
 
 		void openGUI(char);
 		void closeGUI();
+
+		void handleLeftClickPressed(Event, RenderWindow*);
+		void handleLeftClickReleased(Event, RenderWindow*);
 
 	protected:
 

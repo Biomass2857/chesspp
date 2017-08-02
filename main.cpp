@@ -50,13 +50,13 @@ int main()
 				case Event::EventType::MouseButtonPressed:
 					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME)
 					{
-						chessBoard.dragPiece(chessBoard.getFieldForPosition(Mouse::getPosition(window)));
+						chessBoard.handleLeftClickPressed(event, &window);
 					}
 					break;
 				case Event::EventType::MouseButtonReleased:
 					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME)
 					{
-						chessBoard.dropPiece(chessBoard.getFieldForPosition(Mouse::getPosition(window)));
+						chessBoard.handleLeftClickReleased(event, &window);
 					}
 					break;
 			}

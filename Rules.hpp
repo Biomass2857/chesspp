@@ -24,7 +24,7 @@ class History
 	public:
 		History();
 		~History();
-		
+
 		bool whoHasToMoveNext();
 		
 		void inc();

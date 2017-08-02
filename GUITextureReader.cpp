@@ -6,38 +6,68 @@ GUITextureReader::GUITextureReader() {}
 GUITextureReader::~GUITextureReader() {}
 
 bool GUITextureReader::windowTexturesLoaded = false;
+bool GUITextureReader::windowTexturesDarkLoaded = false;
 Texture GUITextureReader::windowTextures[10];
+Texture GUITextureReader::windowTexturesDark[10];
 
-Texture* GUITextureReader::getWindowTextures()
+Texture* GUITextureReader::getWindowTextures(bool dark)
 {
-	if(!windowTexturesLoaded){
-
-		Image sheet;
-
-		if(sheet.loadFromFile("assets/gui/window.png"))
+	if(!dark)
+	{
+		if(!windowTexturesLoaded)
 		{
-			if(sheet.getSize().x == 16 && sheet.getSize().y == 16)
+			Image sheet;
+
+			if(sheet.loadFromFile("assets/gui/window.png"))
 			{
-				windowTextures[0].loadFromImage(sheet, IntRect(0, 0, 6, 6));
-				windowTextures[1].loadFromImage(sheet, IntRect(5, 0, 6, 6));
-				windowTextures[2].loadFromImage(sheet, IntRect(10, 0, 6, 6));
-				windowTextures[3].loadFromImage(sheet, IntRect(0, 5, 6, 6));
-				windowTextures[4].loadFromImage(sheet, IntRect(5, 5, 6, 6));
-				windowTextures[5].loadFromImage(sheet, IntRect(10, 5, 6, 6));
-				windowTextures[6].loadFromImage(sheet, IntRect(0, 10, 6, 6));
-				windowTextures[7].loadFromImage(sheet, IntRect(5, 10, 6, 6));
-				windowTextures[8].loadFromImage(sheet, IntRect(10, 10, 6, 6));
+				if(sheet.getSize().x == 16 && sheet.getSize().y == 16)
+				{
+					windowTextures[0].loadFromImage(sheet, IntRect(0, 0, 6, 6));
+					windowTextures[1].loadFromImage(sheet, IntRect(5, 0, 6, 6));
+					windowTextures[2].loadFromImage(sheet, IntRect(10, 0, 6, 6));
+					windowTextures[3].loadFromImage(sheet, IntRect(0, 5, 6, 6));
+					windowTextures[4].loadFromImage(sheet, IntRect(5, 5, 6, 6));
+					windowTextures[5].loadFromImage(sheet, IntRect(10, 5, 6, 6));
+					windowTextures[6].loadFromImage(sheet, IntRect(0, 10, 6, 6));
+					windowTextures[7].loadFromImage(sheet, IntRect(5, 10, 6, 6));
+					windowTextures[8].loadFromImage(sheet, IntRect(10, 10, 6, 6));
+				}
+				for(char i = 0; i < 9; i++)
+				{
+					windowTextures[i].setRepeated(true);
+				}
 			}
-			for(char i = 0; i < 9; i++)
-			{
-				windowTextures[i].setRepeated(true);
-			}
+			windowTextures[9].loadFromFile("assets/gui/window_overlay.png");
 		}
-		if(!windowTextures[9].loadFromFile("assets/gui/window_overlay.png"))
-		{
-			std::cout << "Failed to load" << '\n';
-		}
+		return windowTextures;
 	}
+	else
+	{
+		if(!windowTexturesDarkLoaded)
+		{
+			Image sheet;
 
-	return windowTextures;
+			if(sheet.loadFromFile("assets/gui/window_dark.png"))
+			{
+				if(sheet.getSize().x == 16 && sheet.getSize().y == 16)
+				{
+					windowTexturesDark[0].loadFromImage(sheet, IntRect(0, 0, 6, 6));
+					windowTexturesDark[1].loadFromImage(sheet, IntRect(5, 0, 6, 6));
+					windowTexturesDark[2].loadFromImage(sheet, IntRect(10, 0, 6, 6));
+					windowTexturesDark[3].loadFromImage(sheet, IntRect(0, 5, 6, 6));
+					windowTexturesDark[4].loadFromImage(sheet, IntRect(5, 5, 6, 6));
+					windowTexturesDark[5].loadFromImage(sheet, IntRect(10, 5, 6, 6));
+					windowTexturesDark[6].loadFromImage(sheet, IntRect(0, 10, 6, 6));
+					windowTexturesDark[7].loadFromImage(sheet, IntRect(5, 10, 6, 6));
+					windowTexturesDark[8].loadFromImage(sheet, IntRect(10, 10, 6, 6));
+				}
+				for(char i = 0; i < 9; i++)
+				{
+					windowTexturesDark[i].setRepeated(true);
+				}
+			}
+			windowTexturesDark[9].loadFromFile("assets/gui/window_overlay.png");
+		}
+		return windowTexturesDark;
+	}
 }

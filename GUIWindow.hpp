@@ -11,7 +11,7 @@ class GUIWindow
 {
 	public:
 		GUIWindow();
-		GUIWindow(Sprite, Vector2u, bool = false);
+		GUIWindow(Sprite, Vector2u, bool = false, bool = false);
 		~GUIWindow();
 
 		void setCentered(bool);

@@ -4,10 +4,10 @@
 
 GUIWindow::GUIWindow() {}
 
-GUIWindow::GUIWindow(Sprite sprite_, Vector2u windS, bool center) : isOpen(false)
+GUIWindow::GUIWindow(Sprite sprite_, Vector2u windS, bool dark, bool center) : isOpen(false), isCentered(center)
 {
 	windSize = windS;
-	Texture* textures = GUITextureReader::getWindowTextures();
+	Texture* textures = GUITextureReader::getWindowTextures(dark);
 	for(char i = 0; i < 9; i++)
 	{
 		sprites[i].setTexture(*(textures + i));
@@ -53,8 +53,10 @@ void GUIWindow::recalculateSprites()
 	Vector2f scale = sprite.getScale();
 	Vector2f bounds = Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
 
-	float posx[3] = {pos.x - windSize.x / 128 * 6, pos.x, pos.x + bounds.x};
-	float posy[3] = {pos.y - windSize.y / 128 * 6, pos.y, pos.y + bounds.y};
+	float centerx = isCentered ? bounds.x / 2 : 0;
+	float centery = isCentered ? bounds.y / 2 : 0;
+	float posx[3] = {pos.x - windSize.x / 128 * 6 - centerx, pos.x - centerx, pos.x + bounds.x - centerx};
+	float posy[3] = {pos.y - windSize.y / 128 * 6 - centery, pos.y - centery, pos.y + bounds.y - centery};
 	float scalex[3] = {float(windSize.x / 128), float(bounds.x) / 6, float(windSize.x / 128)};
 	float scaley[3] = {float(windSize.y / 128), float(bounds.y) / 6, float(windSize.y / 128)};
 
