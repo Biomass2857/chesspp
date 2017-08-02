@@ -139,8 +139,7 @@ void ChessBoard::reset()
 
 void ChessBoard::placePieces()
 {
-	/*char board1[8][8] =
-	{
+	/*{
 		{ 2, 1, 0, 0, 0, 0, 8, 9 },
 		{ 3, 1, 0, 0, 0, 0, 8, 10 },
 		{ 4, 1, 0, 0, 0, 0, 8, 11 },
@@ -148,7 +147,7 @@ void ChessBoard::placePieces()
 		{ 6, 1, 0, 0, 0, 0, 8, 13 },
 		{ 4, 1, 0, 0, 0, 0, 8, 11 },
 		{ 3, 1, 0, 0, 0, 0, 8, 10 },
-		{ 2, 1, 0, 0, 0, 0, 8, 9 },len - 1
+		{ 2, 1, 0, 0, 0, 0, 8, 9 },
 	};*/
 
 	for(int dx = 0; dx < len; dx++)
@@ -204,10 +203,10 @@ void ChessBoard::dropPiece(Vector2c pos)
 	{
 		if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
 		{
-			movePiece(dragPieceInitialPosition, pos);
+		//	movePiece(dragPieceInitialPosition, pos);
 			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history);
 			cout <<"Possible."<< endl;
-			
+
 			for(int dy = 0; dy < len; dy++)
 			{
 				for(int dx = 0; dx < len; dx++)
@@ -216,12 +215,13 @@ void ChessBoard::dropPiece(Vector2c pos)
 				}
 				cout << endl;
 			}
-			
+
 			cout << endl;
 		}
 		else
 			cout <<"This Move is not Possible"<< endl;
 		isDraggingPiece = false;
+		handlePieces();
 	}
 }
 
@@ -279,7 +279,7 @@ void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
 			if(promotedTo != 0)
 			{
 				// Handle Promotion
-				currentGUI = 0;
+				closeGUI();
 			}
 			break;
 
