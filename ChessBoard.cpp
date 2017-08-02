@@ -4,7 +4,7 @@
 ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
 {
 	reset();
-	currentGUI = 1;
+	currentGUI = 0;
 }
 
 ChessBoard::~ChessBoard() {}
@@ -41,7 +41,7 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 
 	handlePieces();
 
-	promotionGUI = PromotionGUI(&texturePack, true, windSize);
+	// promotionGUI = PromotionGUI(&texturePack, true, windSize);
 
 	return true;
 }
@@ -122,7 +122,7 @@ void ChessBoard::render(RenderWindow *window)
 	switch(currentGUI)
 	{
 		case 1:
-			promotionGUI.render(window);
+			// promotionGUI.render(window);
 			break;
 	}
 }

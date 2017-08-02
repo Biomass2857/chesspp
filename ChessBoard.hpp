@@ -44,7 +44,7 @@ class ChessBoard
 	protected:
 
 		Sprite test;
-		GUIWindow w;
+		// GUIWindow w;
 
 		const unsigned int len;
 		char board[8][8];
