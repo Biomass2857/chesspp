@@ -1,20 +1,5 @@
 #include "Rules.hpp"
 
-Move::Move()
-{
-	startPos = Vector2c(0, 0);
-	endPos = Vector2c(0, 0);
-	movingPieceID = 0;
-	newPieceID = 0;
-}
-
-Move::Move(Vector2c s, Vector2c e, unsigned char pid, unsigned char npid)
-{
-	startPos = s;
-	endPos = e;
-	movingPieceID = pid;
-	newPieceID = npid;
-}
 
 History::History()
 {
@@ -60,7 +45,7 @@ void History::addMove(Move move)
 
 void History::inc()
 {
-	moves.push_back(Move());
+	// moves.push_back(Move());
 }
 
 void History::reset()
@@ -744,8 +729,10 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 		brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
 		brd[startPos.x][startPos.y] = 0;
 	}
-	history.addMove(Move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0));
+	Move move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0);
+	history.addMove(move);
 	NetworkHandler::getInstance()->sendMove(move, history.getMoveNumber());
+
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
@@ -753,5 +740,4 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 			*(board + dx * len + dy) = brd[dx][dy];
 		}
 	}
-	history.inc();
 }

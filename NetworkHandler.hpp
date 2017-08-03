@@ -2,7 +2,7 @@
 #define NETWORKHANDLER_HPP
 #include "util.hpp"
 #include <SFML/Network.hpp>
-#include "Rules.hpp"
+#include "Move.hpp"
 
 using namespace std;
 using namespace sf;

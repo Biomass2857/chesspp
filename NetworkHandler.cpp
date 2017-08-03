@@ -1,4 +1,5 @@
 #include "NetworkHandler.hpp"
+#include <iostream>
 
 NetworkHandler::NetworkHandler() : sessionType(SessionType::CLIENT), connected(false), connecting(false), port(0)
 {
@@ -83,10 +84,10 @@ void NetworkHandler::disconnect()
 
 void NetworkHandler::sendMove(Move move, int len)
 {
+	move.startPos.x++; move.startPos.y++; move.endPos.x++; move.endPos.y++;
 	currentPacket.clear();
-	currentPacket << move.startPos.x << move.startPos.y << move.endPos.x << move.endPos.y << move.movingPieceID << move.newPieceID << len;
+	currentPacket << &move.startPos.x << &move.startPos.y << &move.endPos.x << &move.endPos.y << &move.movingPieceID << &move.newPieceID << len;
 	sending = true;
-	return true;
 }
 
 bool NetworkHandler::isSending()
@@ -98,24 +99,30 @@ void NetworkHandler::send()
 {
 	if(socket.send(currentPacket) != Socket::Done)
 		return;
+	std::cout << "send" << '\n';
 	sending = false;
 	return;
 }
 
-bool receiveMove()
+bool NetworkHandler::receiveMove()
 {
-	if(socket(currentPacket) != Socket::Done)
+	Socket::Status s = socket.receive(currentPacket);
+	if(s == Socket::Partial) std::cout << "partial" << '\n';
+	if(s == Socket::Disconnected) std::cout << "discon" << '\n';
+	if(s == Socket::Error) std::cout << "error" << '\n';
+	if(s != Socket::Done)
 		return false;
-	currentPacket >> moveBuffer.startPos.x >> moveBuffer.startPos.y >> moveBuffer.endPos.x >> moveBuffer.endPos.y >> moveBuffer.movingPieceID >> moveBuffer.newPieceID >> moveNumber;
+	currentPacket >> &moveBuffer.startPos.x >> &moveBuffer.startPos.y >> &moveBuffer.endPos.x >> &moveBuffer.endPos.y >> &moveBuffer.movingPieceID >> &moveBuffer.newPieceID >> moveNumber;
+	moveBuffer.startPos.x--; moveBuffer.startPos.y--; moveBuffer.endPos.x--; moveBuffer.endPos.y--;
 	return true;
 }
 
-Move getMove()
+Move NetworkHandler::getMove()
 {
-	return MoveBuffer;
+	return moveBuffer;
 }
 
-int getMoveNumber()
+int NetworkHandler::getMoveNumber()
 {
 	return moveNumber;
 }
