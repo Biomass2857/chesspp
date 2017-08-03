@@ -201,7 +201,7 @@ void ChessBoard::dragPiece(Vector2u pos)
 
 void ChessBoard::dragPiece(Vector2c pos)
 {
-	if(board[pos.x][pos.y] != 0)
+	if(board[pos.x][pos.y] != 0 && board[pos.x][pos.y] / 7 == (ownColor?1:0))
 	{
 		isDraggingPiece = true;
 		dragPieceInitialPosition.x = pos.x;
