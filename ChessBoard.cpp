@@ -25,14 +25,6 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 
 	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
 
-	for(int dx = 0; dx < len; dx++)
-	{
-		for(int dy = 0; dy < len; dy++)
-		{
-			backgroundImage.copy(texturePack.get('f', (dx + dy) % 2 == 1).copyToImage(), dx * SSLEN, dy * SSLEN);
-		}
-	}
-
 	backgroundTexture.loadFromImage(backgroundImage);
 	backgroundSprite.setTexture(backgroundTexture);
 	backgroundSprite.setPosition(0, 0);
