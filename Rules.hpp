@@ -4,21 +4,11 @@
 #include <vector>
 #include <cmath>
 #include "util.hpp"
+#include "NetworkHandler.hpp"
+#include "Move.hpp"
 
 using namespace std;
 using namespace sf;
-
-struct Move
-{
-	Move();
-	Move(Vector2c, Vector2c, unsigned char, unsigned char);
-	Vector2c startPos;
-	Vector2c endPos;
-	unsigned char movingPieceID;
-	unsigned char newPieceID;
-};
-
-typedef struct Move Move;
 
 class History
 {
@@ -28,12 +18,14 @@ class History
 
 		bool whoHasToMoveNext();
 		void addMove(Move move);
-		
+
 		void reset();
-		
+
 		bool castleLeftEnabled(bool);
 		bool castleRightEnabled(bool);
-		
+
+		int getMoveNumber();
+
 	protected:
 		vector<Move> moves;
 		bool castleWhiteRight;

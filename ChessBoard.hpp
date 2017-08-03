@@ -4,7 +4,8 @@
 #include "ChessTextureReader.hpp"
 #include "Rules.hpp"
 #include "util.hpp"
-#include "GUIWindow.hpp"
+#include "PromotionGUI.hpp"
+#include "NetworkHandler.hpp"
 
 using namespace std;
 using namespace sf;
@@ -13,11 +14,13 @@ class ChessBoard
 {
 	public:
 
-		ChessBoard();
+		ChessBoard(bool);
 		~ChessBoard();
 
+		bool getOwnColor();
+		bool isOwnMove();
+
 		bool loadGraphics(Vector2u, string);
-		void loadGUI();
 		void placePieces();
 		void reset();
 
@@ -43,7 +46,10 @@ class ChessBoard
 		void handleLeftClickPressed(Event, RenderWindow*);
 		void handleLeftClickReleased(Event, RenderWindow*);
 
+		History* getHistory();
+
 	protected:
+		bool ownColor;
 
 		Sprite test;
 		GUIWindow w;
@@ -74,10 +80,7 @@ class ChessBoard
 
 		char currentGUI;
 
-		GUIWindow pawnSpecialMoveGUI;
-		Sprite pawnSpecialMoveSprite;
-		Texture pawnSpecialMoveTexture;
-		Image pawnSpecialMoveImage;
+		PromotionGUI promotionGUI;
 };
 
 #endif

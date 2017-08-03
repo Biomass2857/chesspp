@@ -1,12 +1,22 @@
 #include "ChessBoard.hpp"
 #include <iostream>
 
-ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
+ChessBoard::ChessBoard(bool col) : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false), ownColor(col)
 {
 	reset();
 }
 
 ChessBoard::~ChessBoard() {}
+
+bool ChessBoard::getOwnColor()
+{
+	return ownColor;
+}
+
+bool ChessBoard::isOwnMove()
+{
+	return history.whoHasToMoveNext() == ownColor;
+}
 
 char ChessBoard::getField(Vector2c pos)
 {
@@ -22,17 +32,17 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 		return false;
 
 	windSize = wSize;
-	loadGUI();
 
 	backgroundImage.create(len * SSLEN, len * SSLEN, Color::White);
 
 	for(int dx = 0; dx < len; dx++)
 	{
-		for(int dy = 0; dy < len; dy++)
+        for(int dy = 0; dy < len; dy++)
 		{
 			backgroundImage.copy(texturePack.get('f', (dx + dy) % 2 == 1).copyToImage(), dx * SSLEN, dy * SSLEN);
 		}
 	}
+
 
 	backgroundTexture.loadFromImage(backgroundImage);
 	backgroundSprite.setTexture(backgroundTexture);
@@ -41,24 +51,9 @@ bool ChessBoard::loadGraphics(Vector2u wSize, string filename)
 
 	handlePieces();
 
+	promotionGUI.init(&texturePack, true, windSize);
 
 	return true;
-}
-
-void ChessBoard::loadGUI()
-{
-	pawnSpecialMoveImage.create(64, 16, Color::Transparent);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(3).copyToImage(), 0, 0);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(4).copyToImage(), 16, 0);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(2).copyToImage(), 32, 0);
-	pawnSpecialMoveImage.copy(texturePack.textures.at(5).copyToImage(), 48, 0);
-	pawnSpecialMoveTexture.loadFromImage(pawnSpecialMoveImage);
-	pawnSpecialMoveSprite.setTexture(pawnSpecialMoveTexture);
-	pawnSpecialMoveSprite.setOrigin(pawnSpecialMoveImage.getSize().x / 2, pawnSpecialMoveImage.getSize().y / 2);
-	pawnSpecialMoveSprite.setPosition(windSize.x * 0.5, windSize.y * 0.5);
-	pawnSpecialMoveSprite.setScale(windSize.x / len / SSLEN, windSize.y / len / SSLEN);
-	pawnSpecialMoveGUI = GUIWindow(pawnSpecialMoveSprite, windSize, true, true);
-	pawnSpecialMoveGUI.show();
 }
 
 void ChessBoard::setField(Vector2c pos, char value)
@@ -74,8 +69,11 @@ void ChessBoard::handlePieces()
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			if(board[dx][dy] != 0 && !(isMovingPiece && dx == movePieceFrom.x && dy == movePieceFrom.y) && !(isDraggingPiece && dx == dragPieceInitialPosition.x && dy == dragPieceInitialPosition.y))
-				boardImage.copy(texturePack.textures.at(board[dx][dy]).copyToImage(), dx * SSLEN, (len - dy - 1) * SSLEN);
+			if(board[dx][dy] % 7 != 0 && !(isMovingPiece && dx == movePieceFrom.x && dy == movePieceFrom.y) && !(isDraggingPiece && dx == dragPieceInitialPosition.x && dy == dragPieceInitialPosition.y))
+				if(ownColor)
+					boardImage.copy(texturePack.textures.at(board[dx][dy]).copyToImage(), dx * SSLEN, dy * SSLEN);
+				else
+					boardImage.copy(texturePack.textures.at(board[dx][dy]).copyToImage(), dx * SSLEN, (len - dy - 1) * SSLEN);
 		}
 	}
 
@@ -113,14 +111,18 @@ void ChessBoard::handle(Vector2i cursorPos)
 	{
 		if(movePieceClock.getElapsedTime().asMilliseconds() >= 1000)
 		{
+			setField(movePieceTo, getField(movePieceFrom));
+			setField(movePieceFrom, 0);
 			isMovingPiece = false;
 			handlePieces();
 		}
 		else
 		{
 			short time = movePieceClock.getElapsedTime().asMilliseconds();
-			moveSprite.setPosition((movePieceFrom.x * 1000 - (movePieceFrom.x - movePieceTo.x) * time) * windSize.x / len / 1000,
-			(len * 1000 - 1000 - (movePieceFrom.y * 1000 - (movePieceFrom.y - movePieceTo.y) * time)) * windSize.y / len / 1000);
+			if(ownColor)
+				moveSprite.setPosition((movePieceFrom.x * 1000 - (movePieceFrom.x - movePieceTo.x) * time) * windSize.x / len / 1000, (movePieceFrom.y * 1000 - (movePieceFrom.y - movePieceTo.y) * time) * windSize.y / len / 1000);
+			else
+				moveSprite.setPosition((movePieceFrom.x * 1000 - (movePieceFrom.x - movePieceTo.x) * time) * windSize.x / len / 1000, (len * 1000 - 1000 - (movePieceFrom.y * 1000 - (movePieceFrom.y - movePieceTo.y) * time)) * windSize.y / len / 1000);
 
 		}
 	}
@@ -137,7 +139,7 @@ void ChessBoard::render(RenderWindow *window)
 	switch(currentGUI)
 	{
 		case 1:
-			pawnSpecialMoveGUI.render(window);
+			promotionGUI.render(window);
 			break;
 	}
 }
@@ -155,8 +157,7 @@ void ChessBoard::reset()
 
 void ChessBoard::placePieces()
 {
-	/*char board1[8][8] =
-	{
+	/*{
 		{ 2, 1, 0, 0, 0, 0, 8, 9 },
 		{ 3, 1, 0, 0, 0, 0, 8, 10 },
 		{ 4, 1, 0, 0, 0, 0, 8, 11 },
@@ -164,7 +165,7 @@ void ChessBoard::placePieces()
 		{ 6, 1, 0, 0, 0, 0, 8, 13 },
 		{ 4, 1, 0, 0, 0, 0, 8, 11 },
 		{ 3, 1, 0, 0, 0, 0, 8, 10 },
-		{ 2, 1, 0, 0, 0, 0, 8, 9 },len - 1
+		{ 2, 1, 0, 0, 0, 0, 8, 9 },
 	};*/
 
 	for(int dx = 0; dx < len; dx++)
@@ -200,7 +201,7 @@ void ChessBoard::dragPiece(Vector2u pos)
 
 void ChessBoard::dragPiece(Vector2c pos)
 {
-	if(board[pos.x][pos.y] != 0)
+	if(board[pos.x][pos.y] != 0 && board[pos.x][pos.y] / 7 == (ownColor?1:0))
 	{
 		isDraggingPiece = true;
 		dragPieceInitialPosition.x = pos.x;
@@ -220,13 +221,16 @@ void ChessBoard::dropPiece(Vector2c pos)
 	{
 		if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
 		{
-			movePiece(dragPieceInitialPosition, pos);
+		//	movePiece(dragPieceInitialPosition, pos);
 			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history);
 			cout <<"Possible."<< endl;
+
+			cout << endl;
 		}
 		else
 			cout <<"This Move is not Possible"<< endl;
 		isDraggingPiece = false;
+		handlePieces();
 	}
 }
 
@@ -236,6 +240,8 @@ Vector2u ChessBoard::getFieldForPosition(Vector2i pos)
 	{
 		return Vector2u(0, 0);
 	}
+	if(ownColor)
+		return Vector2u(pos.x / (windSize.x / len), pos.y / (windSize.y / len));
 	return Vector2u(pos.x / (windSize.x / len), len - 1 - pos.y / (windSize.y / len));
 }
 
@@ -266,6 +272,7 @@ void ChessBoard::handleLeftClickPressed(Event event, RenderWindow* window)
 			dragPiece(getFieldForPosition(Mouse::getPosition(*window)));
 			break;
 		case 1:
+			promotionGUI.handleLeftClickPressed(window);
 			break;
 
 	}
@@ -279,7 +286,18 @@ void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
 			dropPiece(getFieldForPosition(Mouse::getPosition(*window)));
 			break;
 		case 1:
+			char promotedTo = promotionGUI.handleLeftClickReleased(window);
+			if(promotedTo != 0)
+			{
+				// Handle Promotion
+				closeGUI();
+			}
 			break;
 
 	}
+}
+
+History* ChessBoard::getHistory()
+{
+	return &history;
 }

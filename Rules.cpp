@@ -1,20 +1,5 @@
 #include "Rules.hpp"
 
-Move::Move()
-{
-	startPos = Vector2c(0, 0);
-	endPos = Vector2c(0, 0);
-	movingPieceID = 0;
-	newPieceID = 0;
-}
-
-Move::Move(Vector2c s, Vector2c e, unsigned char pid, unsigned char npid)
-{
-	startPos = s;
-	endPos = e;
-	movingPieceID = pid;
-	newPieceID = npid;
-}
 
 History::History()
 {
@@ -31,7 +16,7 @@ bool History::whoHasToMoveNext()
 void History::addMove(Move move)
 {
 	moves.push_back(move);
-	
+
 	if(move.movingPieceID == 6)
 	{
 		castleWhiteRight = false;
@@ -91,12 +76,17 @@ bool History::castleRightEnabled(bool col)
 	}
 }
 
+int History::getMoveNumber()
+{
+	return moves.size();
+}
+
 bool threatened(unsigned int len, char *board, bool col)
 {
 	Vector2c king = Vector2c(0, 0);
-	
+
 	char brd[len][len];
-	
+
 	for(size_t dx = 0; dx < len; dx++)
 	{
 		for(size_t dy = 0; dy < len; dy++)
@@ -106,7 +96,7 @@ bool threatened(unsigned int len, char *board, bool col)
 				king = Vector2c(dx, dy);
 		}
 	}
-	
+
 	// King
 	for(int offsetX = -1; offsetX < 2; offsetX++)
 	{
@@ -122,56 +112,56 @@ bool threatened(unsigned int len, char *board, bool col)
 			}
 		}
 	}
-	
+
 	// Knight
 	if(king.x + 2 < len && king.y + 1 < len)
 	{
 		if(brd[king.x + 2][king.y + 1] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x + 2 < len && king.y - 1 >= 0)
 	{
 		if(brd[king.x + 2][king.y - 1] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x - 2 >= 0 && king.y + 1 < len)
 	{
 		if(brd[king.x - 2][king.y + 1] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x - 2 >= 0 && king.y - 1 >= 0)
 	{
 		if(brd[king.x - 2][king.y - 1] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x + 1 < len && king.y + 2 < len)
 	{
 		if(brd[king.x + 1][king.y + 2] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x + 1 < len && king.y - 2 >= 0)
 	{
 		if(brd[king.x + 1][king.y - 2] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x - 1 >= 0 && king.y + 2 < len)
 	{
 		if(brd[king.x - 1][king.y + 2] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	if(king.x - 1 >= 0 && king.y - 2 >= 0)
 	{
 		if(brd[king.x - 1][king.y - 2] == 3 + !col * 7)
 			return true;
 	}
-	
+
 	// Pawn
 	if(!col)
 	{
@@ -180,7 +170,7 @@ bool threatened(unsigned int len, char *board, bool col)
 			if(brd[king.x + 1][king.y + 1] == 8)
 				return true;
 		}
-		
+
 		if(king.x - 1 >= 0 && king.y + 1 < len)
 		{
 			if(brd[king.x - 1][king.y + 1] == 8)
@@ -194,88 +184,88 @@ bool threatened(unsigned int len, char *board, bool col)
 			if(brd[king.x + 1][king.y - 1] == 1)
 				return true;
 		}
-		
+
 		if(king.x - 1 >= 0 && king.y - 1 >= 0)
 		{
 			if(brd[king.x - 1][king.y - 1] == 1)
 				return true;
 		}
 	}
-	
+
 	// Rook & partial queen
 	for(int dx = king.x + 1; dx < len; dx++)
 	{
 		if(brd[dx][king.y] != 0 && brd[dx][king.y] != 2 + 7 * !col && brd[dx][king.y] != 5 + 7 * !col)
 			break;
-		
+
 		if(brd[dx][king.y] == 2 + 7 * !col || brd[dx][king.y] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	for(int dx = king.x - 1; dx >= 0; dx--)
 	{
 		if(brd[dx][king.y] != 0 && brd[dx][king.y] != 2 + 7 * !col && brd[dx][king.y] != 5 + 7 * !col)
 			break;
-			
+
 		if(brd[dx][king.y] == 2 + 7 * !col || brd[dx][king.y] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	for(int dy = king.y + 1; dy < len; dy++)
 	{
 		if(brd[king.x][dy] != 0 && brd[king.x][dy] != 2 + 7 * !col && brd[king.x][dy] != 5 + 7 * !col)
 			break;
-			
+
 		if(brd[king.x][dy] == 2 + 7 * !col || brd[king.x][dy] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	for(int dy = king.y - 1; dy >= 0; dy--)
 	{
 		if(brd[king.x][dy] != 0 && brd[king.x][dy] != 2 + 7 * !col && brd[king.x][dy] != 5 + 7 * !col)
 			break;
-			
+
 		if(brd[king.x][dy] == 2 + 7 * !col || brd[king.x][dy] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	// Bishop & partial queen
 	for(int offset = 1; (king.x + offset < len) && (king.y + offset < len); offset++)
 	{
 		if(brd[king.x + offset][king.y + offset] != 0 && brd[king.x + offset][king.y + offset] != 4 + 7 * !col && brd[king.x + offset][king.y + offset] != 5 + 7 * !col)
 			break;
-		
+
 		if(brd[king.x + offset][king.y + offset] == 4 + 7 * !col || brd[king.x + offset][king.y + offset] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	for(int offset = 1; (king.x - offset >= 0) && (king.y + offset < len); offset++)
 	{
 		if(brd[king.x - offset][king.y + offset] != 0 && brd[king.x - offset][king.y + offset] != 4 + 7 * !col && brd[king.x - offset][king.y + offset] != 5 + 7 * !col)
 			break;
-		
+
 		if(brd[king.x - offset][king.y + offset] == 4 + 7 * !col || brd[king.x - offset][king.y + offset] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	for(int offset = 1; (king.x + offset < len) && (king.y - offset >= 0); offset++)
 	{
 		if(brd[king.x + offset][king.y - offset] != 0 && brd[king.x + offset][king.y - offset] != 4 + 7 * !col && brd[king.x + offset][king.y - offset] != 5 + 7 * !col)
 			break;
-			
+
 		if(brd[king.x + offset][king.y - offset] == 4 + 7 * !col || brd[king.x + offset][king.y - offset] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	for(int offset = 1; (king.x - offset >= len) && (king.y - offset >= len); offset++)
 	{
 		if(brd[king.x - offset][king.y - offset] != 0 && brd[king.x - offset][king.y - offset] != 4 + 7 * !col && brd[king.x - offset][king.y - offset] != 5 + 7 * !col)
 			break;
-		
+
 		if(brd[king.x - offset][king.y - offset] == 4 + 7 * !col || brd[king.x - offset][king.y - offset] == 5 + 7 * !col)
 			return true;
 	}
-	
+
 	return false;
 }
 
@@ -306,8 +296,8 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 		if(col != gameHistory.whoHasToMoveNext())
 		{
 			if(gameHistory.whoHasToMoveNext()) cout << "Schwarz ist am zug" << endl; else cout << "Weiß ist am zug" << endl;
-			
-			return false;	
+
+			return false;
 		}
 		pieceID = brd[startPos.x][startPos.y];
 
@@ -373,7 +363,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 						else if(brd[endPos.x][endPos.y] != 0)
 						{
 							cout <<"Der Bauer darf nicht frontal schlagen"<< endl;
-							return false;	
+							return false;
 						}
 					}
 					else
@@ -611,10 +601,10 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 									for(int offset = 1; offset <= 2; offset++)
 									{
 										if(brd[startPos.x - offset][startPos.y] == 0)
-										{					
+										{
 											brd[startPos.x - offset][startPos.y] = brd[startPos.x + 1 - offset][startPos.y];
 											brd[startPos.x + 1 - offset][startPos.y] = 0;
-											
+
 											if(threatened(len, &brd[0][0], col))
 											{
 												cout <<"Der König darf nicht über ein bedrohtes Feld laufen wenn er rochiert"<< endl;
@@ -627,7 +617,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 											return false;
 										}
 									}
-									
+
 									brd[startPos.x][startPos.y] = brd[endPos.x][endPos.y];
 									brd[endPos.x][endPos.y] = 0;
 								}
@@ -645,10 +635,10 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 									for(int offset = 1; offset <= 2; offset++)
 									{
 										if(brd[startPos.x + offset][startPos.y] == 0)
-										{					
+										{
 											brd[startPos.x + offset][startPos.y] = brd[startPos.x - 1 + offset][startPos.y];
 											brd[startPos.x - 1 + offset][startPos.y] = 0;
-										
+
 											if(threatened(len, &brd[0][0], col))
 											{
 												cout <<"Der König darf nicht über ein bedrohtes Feld laufen wenn er rochiert"<< endl;
@@ -661,7 +651,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 											return false;
 										}
 									}
-									
+
 									brd[startPos.x][startPos.y] = brd[endPos.x][endPos.y];
 									brd[endPos.x][endPos.y] = 0;
 								}
@@ -690,7 +680,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				return false;
 			break;
 		}
-		
+
 		if(!castling)
 		{
 			if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
@@ -704,7 +694,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				return false;
 			}
 		}
-		
+
 		if(!threatened(len, &brd[0][0], col))
 		{
 			return true;
@@ -718,16 +708,24 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 	else
 	{
 		cout <<"Start und End positionen müssen sich auf dem Spielfeld befinden"<< endl;
-		return false;	
+		return false;
 	}
 }
 
 void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History &history)
 {
+	char brd[8][8];
+	for(int dx = 0; dx < len; dx++)
+	{
+		for(int dy = 0; dy < len; dy++)
+		{
+			brd[dx][dy] = *(board + dx * len + dy);
+		}
+	}
 	if(startPos != endPos)
 	{
 		char brd[len][len];
-	
+
 		for(int dx = 0; dx < len; dx++)
 		{
 			for(int dy = 0; dy < len; dy++)
@@ -735,7 +733,7 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 				brd[dx][dy] = *(board + dx * len + dy);
 			}
 		}
-	
+
 		if(startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
 		{
 			if(brd[startPos.x][startPos.y] == 6 + 7 * history.whoHasToMoveNext() && abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
@@ -761,10 +759,17 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 				brd[startPos.x][startPos.y] = 0;
 			}
 		}
+		brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+		brd[startPos.x][startPos.y] = 0;
+	}
 	
-		history.addMove(Move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0));
-	
-		for(int dx = 0; dx < len; dx++)
+	Move move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0);
+	history.addMove(move);
+	NetworkHandler::getInstance()->sendMove(move, history.getMoveNumber());
+
+	for(int dx = 0; dx < len; dx++)
+	{
+		for(int dy = 0; dy < len; dy++)
 		{
 			for(int dy = 0; dy < len; dy++)
 			{

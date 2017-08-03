@@ -3,6 +3,7 @@
 
 #include "GUITextureReader.hpp"
 #include <SFML/Graphics.hpp>
+#define RES 128
 
 using namespace std;
 using namespace sf;
@@ -11,15 +12,15 @@ class GUIWindow
 {
 	public:
 		GUIWindow();
-		GUIWindow(Sprite, Vector2u, bool = false, bool = false);
+		void init(Sprite&, Vector2u, bool = false, bool = false);
 		~GUIWindow();
 
 		void setCentered(bool);
 
-		void setSprite(Sprite);
-		Sprite getSprite();
+		void setSprite(Sprite*);
+		Sprite* getSprite();
 
-		void render(RenderWindow*);
+		virtual void render(RenderWindow*);
 
 		void show();
 		void hide();
@@ -27,7 +28,7 @@ class GUIWindow
 
 	protected:
 		void recalculateSprites();
-		Sprite sprite;
+		Sprite* sprite;
 		Vector2f pos;
 		Sprite sprites[9];
 		Vector2u windSize;

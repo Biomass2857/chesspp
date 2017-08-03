@@ -3,14 +3,16 @@
 #include <SFML/Graphics.hpp>
 
 enum class States
-{ 
-	INGAME, 
-	MENU 
+{
+	INGAME,
+	MENU,
+	CONNECTING
 };
 
-namespace sf
+enum class SessionType
 {
-	typedef Vector2<char> Vector2c;
-}
+	HOST,
+	CLIENT
+};
 
 #endif
