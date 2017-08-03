@@ -601,7 +601,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			case 6: // King
 				if(abs(startPos.x - endPos.x) > 1 || abs(startPos.y - endPos.y) > 1)
 				{
-					if(abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
+					/*if(abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
 					{
 						if(!threatened(len, &brd[0][0], col))
 						{
@@ -609,9 +609,24 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 							{
 								if(gameHistory.castleLeftEnabled(col))
 								{
-									for(int offset = 1; offset < 2; offset++)
+									for(int offset = 1; offset <= 2; offset++)
 									{
-										//if(brd[startPos.x]
+										if(brd[startPos.x - offset][startPos.y] == 0)
+										{					
+											brd[startPos.x - offset][startPos.y] = brd[startPos.x][startPos.y];
+											brd[startPos.x][startPos.y] = 0;
+											
+											if(threatened(len, &brd[0][0], col))
+											{
+												cout <<"Der König darf nicht über ein bedrohtes Feld laufen wenn er rochiert"<< endl;
+												return false;
+											}
+										}
+										else
+										{
+											cout <<"Der Bereich zwischen Turm und König muss für die Rochade leer sein."<< endl;
+											return false;
+										}
 									}									
 								}
 								else
@@ -622,7 +637,29 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 							}
 							else if(startPos.x - endPos.x < 0) // Right
 							{
-								if(!gameHistory.castleRightEnabled(col))
+								if(gameHistory.castleRightEnabled(col))
+								{
+									for(int offset = 1; offset <= 2; offset++)
+									{
+										if(brd[startPos.x + offset][startPos.y] == 0)
+										{					
+											brd[startPos.x + offset][startPos.y] = brd[startPos.x][startPos.y];
+											brd[startPos.x][startPos.y] = 0;
+										
+											if(threatened(len, &brd[0][0], col))
+											{
+												cout <<"Der König darf nicht über ein bedrohtes Feld laufen wenn er rochiert"<< endl;
+												return false;
+											}
+										}
+										else
+										{
+											cout <<"Der Bereich zwischen Turm und König muss für die Rochade leer sein."<< endl;
+											return false;
+										}
+									}
+								}
+								else
 								{
 									cout <<"Der König darf nur rochieren wenn er und der entsprechende Turm sich noch nicht bewegt haben"<< endl;
 									return false;
@@ -639,7 +676,12 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 					{
 						cout <<"Der König kann sich nur ein Feld fortbewegen"<< endl;
 						return false;
-					}
+					}*/
+					
+					// Debug TODO	
+					cout <<"Der König kann sich nur ein Feld fortbewegen"<< endl;
+					return false;
+					// Debug TODO
 				}
 			break;
 			default:
@@ -698,6 +740,8 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 		brd[startPos.x][startPos.y] = 0;
 	}
 	
+	history.addMove(Move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0));
+	
 	for(int dx = 0; dx < len; dx++)
 	{
 		for(int dy = 0; dy < len; dy++)
@@ -705,6 +749,4 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 			*(board + dx * len + dy) = brd[dx][dy];
 		}
 	}
-	
-	history.inc();
 }
