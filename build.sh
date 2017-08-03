@@ -1,5 +1,5 @@
 #!/bin/bash
-# ver: 1.0.3 release
+# ver: 1.0.4 release
 
 filename="chess.exe"
 useC=false
@@ -29,6 +29,9 @@ then
 		rm *.o
 		rm *.gch
 	} &>/dev/null
+elif [ "$#" -gt 0 ] && [ "$1" == "run" ];
+then
+	exec="$(./$filename)"
 else
 	if [ "$useC" = true ] && [ "$useCPP" = true ] || [ "$useCPP" = true ];
 	then
