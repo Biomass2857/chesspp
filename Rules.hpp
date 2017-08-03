@@ -10,10 +10,11 @@ using namespace sf;
 
 struct Move
 {
-	Move() {}
-	Vector2c start;
-	Vector2c end;
-	bool castling;
+	Move();
+	Move(Vector2c, Vector2c, unsigned char, unsigned char);
+	Vector2c startPos;
+	Vector2c endPos;
+	unsigned char movingPieceID;
 	unsigned char newPieceID;
 };
 
@@ -26,12 +27,21 @@ class History
 		~History();
 
 		bool whoHasToMoveNext();
+		void addMove(Move move);
 		
 		void inc();
 		
+		void reset();
+		
+		bool castleLeftEnabled(bool);
+		bool castleRightEnabled(bool);
+		
 	protected:
 		vector<Move> moves;
-		unsigned int len;
+		bool castleWhiteRight;
+		bool castleWhiteLeft;
+		bool castleBlackRight;
+		bool castleBlackLeft;
 };
 
 bool threatened(unsigned int, char*, bool);
