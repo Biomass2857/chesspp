@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include "util.hpp"
+#include "NetworkHandler.hpp"
 
 using namespace std;
 using namespace sf;
@@ -27,15 +28,17 @@ class History
 		~History();
 
 		bool whoHasToMoveNext();
-		void addMove(Move move);
-		
+		void addMove(Move move, bool hardMode = false);
+
 		void inc();
-		
+
 		void reset();
-		
+
 		bool castleLeftEnabled(bool);
 		bool castleRightEnabled(bool);
-		
+
+		int getMoveNumber();
+
 	protected:
 		vector<Move> moves;
 		bool castleWhiteRight;

@@ -1,12 +1,22 @@
 #include "ChessBoard.hpp"
 #include <iostream>
 
-ChessBoard::ChessBoard(NetworkHandler* handler) : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false), networkHandler(handler)
+ChessBoard::ChessBoard(bool col) : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false), ownColor(col)
 {
 	reset();
 }
 
 ChessBoard::~ChessBoard() {}
+
+bool ChessBoard::getOwnColor()
+{
+	return ownColor;
+}
+
+bool ChessBoard::isOwnMove()
+{
+	return history.whoHasToMoveNext() == ownColor;
+}
 
 char ChessBoard::getField(Vector2c pos)
 {
@@ -276,4 +286,9 @@ void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
 			break;
 
 	}
+}
+
+History* ChessBoard::getHistory()
+{
+	return &history;
 }

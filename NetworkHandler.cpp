@@ -2,10 +2,17 @@
 
 NetworkHandler::NetworkHandler() : sessionType(SessionType::CLIENT), connected(false), connecting(false), port(0)
 {
+	instance = this;
 	socket.setBlocking(false);
 }
 
 NetworkHandler::~NetworkHandler() {}
+
+NetworkHandler* NetworkHandler::instance = nullptr;
+NetworkHandler* NetworkHandler::getInstance()
+{
+	return instance;
+}
 
 void NetworkHandler::setSessionType(SessionType type)
 {
@@ -74,12 +81,41 @@ void NetworkHandler::disconnect()
 	socket.disconnect();
 }
 
-bool NetworkHandler::sendMove(Move move)
+void NetworkHandler::sendMove(Move move, int len)
 {
-	Packet p;
+	currentPacket.clear();
+	currentPacket << move.startPos.x << move.startPos.y << move.endPos.x << move.endPos.y << move.movingPieceID << move.newPieceID << len;
 	sending = true;
-	if(socket.send(p) != Socket::Done)
-		return false;
-	sending = false;
 	return true;
+}
+
+bool NetworkHandler::isSending()
+{
+	return sending;
+}
+
+void NetworkHandler::send()
+{
+	if(socket.send(currentPacket) != Socket::Done)
+		return;
+	sending = false;
+	return;
+}
+
+bool receiveMove()
+{
+	if(socket(currentPacket) != Socket::Done)
+		return false;
+	currentPacket >> moveBuffer.startPos.x >> moveBuffer.startPos.y >> moveBuffer.endPos.x >> moveBuffer.endPos.y >> moveBuffer.movingPieceID >> moveBuffer.newPieceID >> moveNumber;
+	return true;
+}
+
+Move getMove()
+{
+	return MoveBuffer;
+}
+
+int getMoveNumber()
+{
+	return moveNumber;
 }

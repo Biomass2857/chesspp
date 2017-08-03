@@ -14,8 +14,11 @@ class ChessBoard
 {
 	public:
 
-		ChessBoard(NetworkHandler*);
+		ChessBoard(bool);
 		~ChessBoard();
+
+		bool getOwnColor();
+		bool isOwnMove();
 
 		bool loadGraphics(Vector2u, string);
 		void placePieces();
@@ -43,7 +46,10 @@ class ChessBoard
 		void handleLeftClickPressed(Event, RenderWindow*);
 		void handleLeftClickReleased(Event, RenderWindow*);
 
+		History* getHistory();
+
 	protected:
+		bool ownColor;
 
 		Sprite test;
 		GUIWindow w;
@@ -75,8 +81,6 @@ class ChessBoard
 		char currentGUI;
 
 		PromotionGUI promotionGUI;
-
-		NetworkHandler* networkHandler;
 };
 
 #endif

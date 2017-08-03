@@ -41,7 +41,7 @@ int main()
 	RenderWindow window(VideoMode(wSize.x, wSize.y, 32), "Chess++");
 	Event event;
 
-	ChessBoard chessBoard(&networkHandler);
+	ChessBoard chessBoard(true);
 
 	if(!chessBoard.loadGraphics(wSize, "assets/pieces.png"))
 		return -1;
@@ -97,8 +97,23 @@ int main()
 			case States::INGAME:
 				chessBoard.handle(Mouse::getPosition(window));
 				chessBoard.render(&window);
+				if(chessBoard.isOwnMove()){
+					if(networkHandler.isSending())
+					{
+						networkHandler.send();
+					}
+				}
+				else
+				{
+					if(networkHandler.receiveMove())
+					{
+						chessBoard.getHistory()->addMove(networkHandler.getMove());
+					}
+				}
 				break;
 		}
+
+
 
 		window.display();
 	}

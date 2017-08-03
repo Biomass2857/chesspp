@@ -23,9 +23,19 @@ class NetworkHandler
 		bool listen();
 		void disconnect();
 
-		bool sendMove(Move);
+		void sendMove(Move, int);
+		bool isSending();
+		void send();
+
+		bool receiveMove();
+		Move getMove();
+		int getMoveNumber();
+
+		static NetworkHandler* getInstance();
 
 	protected:
+		static NetworkHandler* instance;
+
 		SessionType sessionType;
 
 		bool connecting;
@@ -34,6 +44,10 @@ class NetworkHandler
 		unsigned short port;
 
 		bool sending;
+		Packet currentPacket;
+
+		Move moveBuffer;
+		int moveNumber;
 
 		TcpSocket socket;
 		TcpListener listener;
