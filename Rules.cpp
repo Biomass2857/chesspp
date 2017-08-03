@@ -58,11 +58,6 @@ void History::addMove(Move move)
 	}
 }
 
-void History::inc()
-{
-	moves.push_back(Move());
-}
-
 void History::reset()
 {
 	castleWhiteRight = true;
@@ -299,7 +294,9 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 		for(size_t dy = 0; dy < len; dy++)
 		{
 			brd[dx][dy] = *(board + dx * len + dy);
+			cout << (int) brd[dx][dy] <<";";
 		}
+		cout << endl;
 	}
 
 	if(startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
@@ -416,7 +413,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				{
 					for(int offsetY = 1; offsetY < abs(startPos.y - endPos.y); offsetY++)
 					{
-						if(startPos.x > endPos.x)
+						if(startPos.y > endPos.y)
 						{
 							if(brd[startPos.x][startPos.y - offsetY] != 0)
 							{

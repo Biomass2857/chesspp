@@ -29,8 +29,6 @@ class History
 		bool whoHasToMoveNext();
 		void addMove(Move move);
 		
-		void inc();
-		
 		void reset();
 		
 		bool castleLeftEnabled(bool);
