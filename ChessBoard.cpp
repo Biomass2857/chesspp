@@ -223,17 +223,6 @@ void ChessBoard::dropPiece(Vector2c pos)
 			movePiece(dragPieceInitialPosition, pos);
 			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history);
 			cout <<"Possible."<< endl;
-			
-			for(int dy = 0; dy < len; dy++)
-			{
-				for(int dx = 0; dx < len; dx++)
-				{
-					cout << (int) board[dx][dy] <<";";
-				}
-				cout << endl;
-			}
-			
-			cout << endl;
 		}
 		else
 			cout <<"This Move is not Possible"<< endl;
