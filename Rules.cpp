@@ -759,10 +759,10 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 				brd[startPos.x][startPos.y] = 0;
 			}
 		}
-		brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
-		brd[startPos.x][startPos.y] = 0;
 	}
-	
+	brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+	brd[startPos.x][startPos.y] = 0;
+
 	Move move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0);
 	history.addMove(move);
 	NetworkHandler::getInstance()->sendMove(move, history.getMoveNumber());
@@ -771,10 +771,7 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			for(int dy = 0; dy < len; dy++)
-			{
-				*(board + dx * len + dy) = brd[dx][dy];
-			}
+			*(board + dx * len + dy) = brd[dx][dy];
 		}
 	}
 }
