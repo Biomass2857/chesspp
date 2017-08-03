@@ -291,6 +291,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 
 	char brd[len][len];
 	bool col = false;
+	bool castling = false;
 	unsigned int pieceID = 0;
 
 	for(size_t dx = 0; dx < len; dx++)
@@ -601,7 +602,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			case 6: // King
 				if(abs(startPos.x - endPos.x) > 1 || abs(startPos.y - endPos.y) > 1)
 				{
-					/*if(abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
+					if(abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
 					{
 						if(!threatened(len, &brd[0][0], col))
 						{
@@ -609,12 +610,13 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 							{
 								if(gameHistory.castleLeftEnabled(col))
 								{
+									castling = true;
 									for(int offset = 1; offset <= 2; offset++)
 									{
 										if(brd[startPos.x - offset][startPos.y] == 0)
 										{					
-											brd[startPos.x - offset][startPos.y] = brd[startPos.x][startPos.y];
-											brd[startPos.x][startPos.y] = 0;
+											brd[startPos.x - offset][startPos.y] = brd[startPos.x + 1 - offset][startPos.y];
+											brd[startPos.x + 1 - offset][startPos.y] = 0;
 											
 											if(threatened(len, &brd[0][0], col))
 											{
@@ -627,7 +629,10 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 											cout <<"Der Bereich zwischen Turm und König muss für die Rochade leer sein."<< endl;
 											return false;
 										}
-									}									
+									}
+									
+									brd[startPos.x][startPos.y] = brd[endPos.x][endPos.y];
+									brd[endPos.x][endPos.y] = 0;
 								}
 								else
 								{
@@ -639,12 +644,13 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 							{
 								if(gameHistory.castleRightEnabled(col))
 								{
+									castling = true;
 									for(int offset = 1; offset <= 2; offset++)
 									{
 										if(brd[startPos.x + offset][startPos.y] == 0)
 										{					
-											brd[startPos.x + offset][startPos.y] = brd[startPos.x][startPos.y];
-											brd[startPos.x][startPos.y] = 0;
+											brd[startPos.x + offset][startPos.y] = brd[startPos.x - 1 + offset][startPos.y];
+											brd[startPos.x - 1 + offset][startPos.y] = 0;
 										
 											if(threatened(len, &brd[0][0], col))
 											{
@@ -658,6 +664,9 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 											return false;
 										}
 									}
+									
+									brd[startPos.x][startPos.y] = brd[endPos.x][endPos.y];
+									brd[endPos.x][endPos.y] = 0;
 								}
 								else
 								{
@@ -676,12 +685,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 					{
 						cout <<"Der König kann sich nur ein Feld fortbewegen"<< endl;
 						return false;
-					}*/
-					
-					// Debug TODO	
-					cout <<"Der König kann sich nur ein Feld fortbewegen"<< endl;
-					return false;
-					// Debug TODO
+					}
 				}
 			break;
 			default:
@@ -690,15 +694,18 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			break;
 		}
 		
-		if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
+		if(!castling)
 		{
-			brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
-			brd[startPos.x][startPos.y] = 0;
-		}
-		else
-		{
-			cout <<"Der König kann nicht geschlagen werden oder du kannst nur Gegner schlagen"<< endl;
-			return false;
+			if(brd[endPos.x][endPos.y] % 7 != 6 && ((!col && brd[endPos.x][endPos.y] > 7) || (col && brd[endPos.x][endPos.y] < 7) || brd[endPos.x][endPos.y] == 0))
+			{
+				brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+				brd[startPos.x][startPos.y] = 0;
+			}
+			else
+			{
+				cout <<"Der König kann nicht geschlagen werden oder du kannst nur Gegner schlagen"<< endl;
+				return false;
+			}
 		}
 		
 		if(!threatened(len, &brd[0][0], col))
@@ -720,33 +727,52 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 
 void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History &history)
 {
-	char brd[len][len];
-	
-	for(int dx = 0; dx < len; dx++)
+	if(startPos != endPos)
 	{
-		for(int dy = 0; dy < len; dy++)
+		char brd[len][len];
+	
+		for(int dx = 0; dx < len; dx++)
 		{
-			brd[dx][dy] = *(board + dx * len + dy);
+			for(int dy = 0; dy < len; dy++)
+			{
+				brd[dx][dy] = *(board + dx * len + dy);
+			}
 		}
-	}
 	
-	if(startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
-	{
-		if(brd[startPos.x][startPos.y] == 6 + 7 * history.whoHasToMoveNext() && abs(startPos.x - endPos.x) == 2)
+		if(startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
 		{
-			// TODO
+			if(brd[startPos.x][startPos.y] == 6 + 7 * history.whoHasToMoveNext() && abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
+			{
+				if(startPos.x - endPos.x > 0)
+				{
+					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+					brd[startPos.x][startPos.y] = 0;
+					brd[endPos.x + 1][endPos.y] = brd[startPos.x - 4][7 * history.whoHasToMoveNext()];
+					brd[startPos.x - 4][7 * history.whoHasToMoveNext()] = 0;
+				}
+				else if(startPos.x - endPos.x < 0)
+				{
+					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+					brd[startPos.x][startPos.y] = 0;
+					brd[endPos.x - 1][endPos.y] = brd[startPos.x + 3][startPos.y];
+					brd[startPos.x + 3][startPos.y] = 0;
+				}
+			}
+			else
+			{
+				brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+				brd[startPos.x][startPos.y] = 0;
+			}
 		}
-		brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
-		brd[startPos.x][startPos.y] = 0;
-	}
 	
-	history.addMove(Move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0));
+		history.addMove(Move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0));
 	
-	for(int dx = 0; dx < len; dx++)
-	{
-		for(int dy = 0; dy < len; dy++)
+		for(int dx = 0; dx < len; dx++)
 		{
-			*(board + dx * len + dy) = brd[dx][dy];
+			for(int dy = 0; dy < len; dy++)
+			{
+				*(board + dx * len + dy) = brd[dx][dy];
+			}
 		}
 	}
 }
