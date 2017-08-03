@@ -1,7 +1,7 @@
 #include "ChessBoard.hpp"
 #include <iostream>
 
-ChessBoard::ChessBoard() : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false)
+ChessBoard::ChessBoard(NetworkHandler* handler) : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false), networkHandler(handler)
 {
 	reset();
 }

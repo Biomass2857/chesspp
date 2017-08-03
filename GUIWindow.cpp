@@ -7,7 +7,6 @@ void GUIWindow::init(Sprite& sprite_, Vector2u windS, bool dark, bool center)
 {
 	isOpen = false;
 	isCentered = center;
-	std::cout << sprite_.getTexture() << '\n';
 	windSize = windS;
 	Texture* textures = GUITextureReader::getWindowTextures(dark);
 	for(char i = 0; i < 9; i++)

@@ -5,6 +5,7 @@
 #include "Rules.hpp"
 #include "util.hpp"
 #include "PromotionGUI.hpp"
+#include "NetworkHandler.hpp"
 
 using namespace std;
 using namespace sf;
@@ -13,7 +14,7 @@ class ChessBoard
 {
 	public:
 
-		ChessBoard();
+		ChessBoard(NetworkHandler*);
 		~ChessBoard();
 
 		bool loadGraphics(Vector2u, string);
@@ -74,6 +75,8 @@ class ChessBoard
 		char currentGUI;
 
 		PromotionGUI promotionGUI;
+
+		NetworkHandler* networkHandler;
 };
 
 #endif

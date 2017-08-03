@@ -3,9 +3,16 @@
 #include <SFML/Graphics.hpp>
 
 enum class States
-{ 
-	INGAME, 
-	MENU 
+{
+	INGAME,
+	MENU,
+	CONNECTING
+};
+
+enum class SessionType
+{
+	HOST,
+	CLIENT
 };
 
 namespace sf
