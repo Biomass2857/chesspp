@@ -2,16 +2,16 @@
 
 Move::Move()
 {
-	start = Vector2c(0, 0);
-	end = Vector2c(0, 0);
+	startPos = Vector2c(0, 0);
+	endPos = Vector2c(0, 0);
 	movingPieceID = 0;
 	newPieceID = 0;
 }
 
 Move::Move(Vector2c s, Vector2c e, unsigned char pid, unsigned char npid)
 {
-	start = s;
-	end = e;
+	startPos = s;
+	endPos = e;
 	movingPieceID = pid;
 	newPieceID = npid;
 }
@@ -603,11 +603,11 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 				{
 					if(abs(startPos.x - endPos.x) == 2 && startPos.y == endPos.y)
 					{
-						if(!threatened(len, &brd[0][0], col)
+						if(!threatened(len, &brd[0][0], col))
 						{
 							if(startPos.x - endPos.x > 0) // Left
 							{
-								if(history.castleLeftEnabled(col))
+								if(gameHistory.castleLeftEnabled(col))
 								{
 									for(int offset = 1; offset < 2; offset++)
 									{
@@ -622,7 +622,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 							}
 							else if(startPos.x - endPos.x < 0) // Right
 							{
-								if(!history.castleRightEnabled(col))
+								if(!gameHistory.castleRightEnabled(col))
 								{
 									cout <<"Der König darf nur rochieren wenn er und der entsprechende Turm sich noch nicht bewegt haben"<< endl;
 									return false;

@@ -10,9 +10,10 @@ using namespace sf;
 
 struct Move
 {
+	Move();
 	Move(Vector2c, Vector2c, unsigned char, unsigned char);
-	Vector2c start;
-	Vector2c end;
+	Vector2c startPos;
+	Vector2c endPos;
 	unsigned char movingPieceID;
 	unsigned char newPieceID;
 };
