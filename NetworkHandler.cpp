@@ -73,3 +73,13 @@ void NetworkHandler::disconnect()
 		listener.close();
 	socket.disconnect();
 }
+
+bool NetworkHandler::sendMove(Move move)
+{
+	Packet p;
+	sending = true;
+	if(socket.send(p) != Socket::Done)
+		return false;
+	sending = false;
+	return true;
+}
