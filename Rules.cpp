@@ -722,10 +722,7 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 	{
 		for(int dy = 0; dy < len; dy++)
 		{
-			for(int dy = 0; dy < len; dy++)
-			{
-				brd[dx][dy] = *(board + dx * len + dy);
-			}
+			brd[dx][dy] = *(board + dx * len + dy);
 		}
 	}
 	if(startPos != endPos)
