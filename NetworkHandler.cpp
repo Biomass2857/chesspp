@@ -108,7 +108,7 @@ bool NetworkHandler::receiveMove()
 {
 	Socket::Status s = socket.receive(currentPacket);
 	if(s == Socket::Partial) std::cout << "partial" << '\n';
-	if(s == Socket::Disconnected) std::cout << "discon" << '\n';
+	if(s == Socket::Disconnected) std::cout << "disconnect" << '\n';
 	if(s == Socket::Error) std::cout << "error" << '\n';
 	if(s != Socket::Done)
 		return false;
