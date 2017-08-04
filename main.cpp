@@ -6,6 +6,7 @@
 #include "util.hpp"
 #include "GUIWindow.hpp"
 #include "NetworkHandler.hpp"
+#include "Menu.hpp"
 
 using namespace std;
 using namespace sf;
@@ -15,7 +16,7 @@ int main()
 	States state = States::MENU;
 	NetworkHandler networkHandler;
 
-	string ip;
+	/*string ip;
 	unsigned short port;
 	std::cout << "port:" << '\n';
 	std::cin >> port;
@@ -39,13 +40,15 @@ int main()
 		if(networkHandler.connectTo(ip))
 			state = States::INGAME;
 		color = true;
-	}
+	}*/
 
 	const Vector2u wSize = Vector2u(640, 640);
 	RenderWindow window(VideoMode(wSize.x, wSize.y, 32), "Chess++");
 	Event event;
 
-	ChessBoard chessBoard(color);
+	Menu menu;
+	menu.init(wSize);
+	ChessBoard chessBoard(true);
 
 	if(!chessBoard.loadGraphics(wSize, "assets/pieces.png"))
 		return -1;
@@ -72,6 +75,8 @@ int main()
 					{
 						chessBoard.handleLeftClickPressed(event, &window);
 					}
+					if(event.mouseButton.button == Mouse::Button::Left && state == States::MENU)
+						menu.handleLeftClickPressed(event, &window);
 					break;
 				case Event::EventType::MouseButtonReleased:
 					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME && chessBoard.isOwnMove())
@@ -96,7 +101,7 @@ int main()
 				}
 				break;
 			case States::MENU:
-
+				menu.render(&window);
 				break;
 			case States::INGAME:
 				chessBoard.handle(Mouse::getPosition(window));

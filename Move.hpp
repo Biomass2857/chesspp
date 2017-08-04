@@ -1,14 +1,10 @@
 #ifndef MOVE_HPP
 #define MOVE_HPP
 #include <SFML/Graphics.hpp>
+#include "util.hpp"
 
 using namespace std;
 using namespace sf;
-
-namespace sf
-{
-	typedef Vector2<char> Vector2c;
-}
 
 struct Move
 {

@@ -15,4 +15,9 @@ enum class SessionType
 	CLIENT
 };
 
+namespace sf
+{
+	typedef Vector2<char> Vector2c;
+}
+
 #endif

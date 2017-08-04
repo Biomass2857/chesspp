@@ -3,9 +3,10 @@
 
 GUIWindow::GUIWindow() {}
 
-void GUIWindow::init(Sprite& sprite_, Vector2u windS, bool dark, bool center)
+void GUIWindow::init(Sprite& sprite_, Vector2u windS, bool dark, bool center, bool open, bool shadow)
 {
-	isOpen = false;
+	useShadow = shadow;
+	isOpen = open;
 	isCentered = center;
 	windSize = windS;
 	Texture* textures = GUITextureReader::getWindowTextures(dark);
@@ -27,7 +28,8 @@ void GUIWindow::render(RenderWindow *w)
 {
 	if(isOpen)
 	{
-		w->draw(bgSprite);
+		if(useShadow)
+			w->draw(bgSprite);
 		for(char i = 0; i < 9; i++)
 		{
 			w->draw(sprites[i]);
@@ -89,4 +91,11 @@ void GUIWindow::toggle()
 void GUIWindow::setCentered(bool value)
 {
 	isCentered = value;
+}
+
+bool GUIWindow::isInbound(Vector2i pos)
+{
+	if(pos.x >= sprites[0].getPosition().x && pos.y >= sprites[0].getPosition().y && pos.x < sprites[8].getPosition().x && pos.y < sprites[8].getPosition().y)
+		return true;
+	return false;
 }

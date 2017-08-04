@@ -12,7 +12,7 @@ class GUIWindow
 {
 	public:
 		GUIWindow();
-		void init(Sprite&, Vector2u, bool = false, bool = false);
+		void init(Sprite&, Vector2u, bool = false, bool = false, bool = false, bool = true);
 		~GUIWindow();
 
 		void setCentered(bool);
@@ -26,6 +26,8 @@ class GUIWindow
 		void hide();
 		void toggle();
 
+		bool isInbound(Vector2i);
+
 	protected:
 		void recalculateSprites();
 		Sprite* sprite;
@@ -35,6 +37,7 @@ class GUIWindow
 		Sprite bgSprite;
 		bool isOpen;
 		bool isCentered;
+		bool useShadow;
 };
 
 #endif

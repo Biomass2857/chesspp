@@ -10,6 +10,12 @@ bool GUITextureReader::windowTexturesDarkLoaded = false;
 Texture GUITextureReader::windowTextures[10];
 Texture GUITextureReader::windowTexturesDark[10];
 
+bool GUITextureReader::menuTexturesLoaded = false;
+Texture GUITextureReader::menuTextures[1];
+
+bool GUITextureReader::fontLoaded = false;
+Font GUITextureReader::font;
+
 Texture* GUITextureReader::getWindowTextures(bool dark)
 {
 	if(!dark)
@@ -70,4 +76,22 @@ Texture* GUITextureReader::getWindowTextures(bool dark)
 		}
 		return windowTexturesDark;
 	}
+}
+
+Texture* GUITextureReader::getMenuTextures()
+{
+	if(!menuTexturesLoaded)
+	{
+		menuTextures[0].loadFromFile("assets/gui/menu_bg.png");
+	}
+	return menuTextures;
+}
+
+Font* GUITextureReader::getFont()
+{
+	if(!fontLoaded)
+	{
+		font.loadFromFile("assets/font/joystix monospace.ttf");
+	}
+	return &font;
 }
