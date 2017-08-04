@@ -111,8 +111,8 @@ void ChessBoard::handle(Vector2i cursorPos)
 	{
 		if(movePieceClock.getElapsedTime().asMilliseconds() >= 1000)
 		{
-			setField(movePieceTo, getField(movePieceFrom));
-			setField(movePieceFrom, 0);
+			hardWriteToBoard(len, &board[0][0], movePieceFrom, movePieceTo, history, true);
+			history.addMove(lastEnemyMove);
 			isMovingPiece = false;
 			handlePieces();
 		}
@@ -222,14 +222,13 @@ void ChessBoard::dropPiece(Vector2c pos)
 		if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
 		{
 		//	movePiece(dragPieceInitialPosition, pos);
-			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history);
+			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history, false);
 			cout <<"Possible."<< endl;
 
 			cout << endl;
 		}
-		else
-			cout <<"This Move is not Possible"<< endl;
 		isDraggingPiece = false;
+		
 		handlePieces();
 	}
 }
@@ -252,6 +251,11 @@ void ChessBoard::movePiece(Vector2c pos1, Vector2c pos2)
 	movePieceClock.restart();
 	isMovingPiece = true;
 	handlePieces();
+}
+
+void ChessBoard::setLastEnemyMove(Move move)
+{
+	lastEnemyMove = move;
 }
 
 void ChessBoard::openGUI(char id)

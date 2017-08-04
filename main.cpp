@@ -8,6 +8,8 @@
 #include "GUIWindow.hpp"
 #include "NetworkHandler.hpp"
 
+#define DEBUG true
+
 using namespace std;
 using namespace sf;
 
@@ -15,17 +17,43 @@ int main()
 {
 	States state = States::MENU;
 	NetworkHandler networkHandler;
-
+	
+	#if DEBUG == false
+	
 	string ip;
 	unsigned short port;
 	std::cout << "port:" << '\n';
 	std::cin >> port;
 	std::cout << "ip (or \"host\"):" << '\n';
 	std::cin >> ip;
+	
+	#elif DEBUG == true
+	
+	// Debug Localhost
+	string ip = "";
+	const unsigned short port = 51001;
+	
+	TcpListener *einsListener = new TcpListener;
+	if(einsListener->listen(port) == Socket::Error)
+	{
+		ip = "127.0.0.1";
+		cout <<"Im Client"<< endl;
+	}
+	else
+	{
+		ip = "host";
+		cout <<"Im Host"<< endl;
+	}
+	
+	einsListener->close();
+	delete einsListener;
+	// Debug localhost
+	
+	#endif
 
+	
+	
 	bool color;
-
-
 	if(ip == "host")
 	{
 		networkHandler.setSessionType(SessionType::HOST);
@@ -110,14 +138,12 @@ int main()
 				{
 					if(networkHandler.receiveMove())
 					{
-						chessBoard.getHistory()->addMove(networkHandler.getMove());
 						chessBoard.movePiece(networkHandler.getMove().startPos, networkHandler.getMove().endPos);
+						chessBoard.setLastEnemyMove(networkHandler.getMove());
 					}
 				}
 				break;
 		}
-
-
 
 		window.display();
 	}

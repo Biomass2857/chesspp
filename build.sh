@@ -1,5 +1,5 @@
 #!/bin/bash
-# ver: 1.0.4 release
+# ver: 1.0.5 release
 
 filename="chess.exe"
 useC=false
@@ -31,7 +31,12 @@ then
 	} &>/dev/null
 elif [ "$#" -gt 0 ] && [ "$1" == "run" ];
 then
-	exec="$(./$filename)"
+	if [ -a "$filename" ];
+	then
+		exec="$(./$filename)"
+	else
+		echo "[Err] You need to compile first"
+	fi
 else
 	if [ "$useC" = true ] && [ "$useCPP" = true ] || [ "$useCPP" = true ];
 	then
@@ -147,7 +152,10 @@ else
 	if [ -a "$filename" ];
 	then
 		echo "[INFO] Build successful"
-		./"$filename"
+		if [ "$#" == 0 ];
+		then
+			./"$filename"
+		fi
 	fi
 
 	# execute end

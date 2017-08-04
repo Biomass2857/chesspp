@@ -37,6 +37,7 @@ class ChessBoard
 		void dropPiece(Vector2u);
 
 		void movePiece(Vector2c, Vector2c);
+		void setLastEnemyMove(Move);
 
 		Vector2u getFieldForPosition(Vector2i);
 
@@ -81,6 +82,8 @@ class ChessBoard
 		char currentGUI;
 
 		PromotionGUI promotionGUI;
+		
+		Move lastEnemyMove;
 };
 
 #endif
