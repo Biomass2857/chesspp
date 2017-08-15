@@ -48,7 +48,7 @@ int main()
 
 	Menu menu;
 	menu.init(wSize);
-	ChessBoard chessBoard(true);
+	ChessBoard chessBoard(false);
 
 	if(!chessBoard.loadGraphics(wSize, "assets/pieces.png"))
 		return -1;
@@ -65,25 +65,17 @@ int main()
 					networkHandler.disconnect();
 					window.close();
 					break;
-				case Event::EventType::KeyPressed:
-
-					break;
-				case Event::EventType::KeyReleased:
-					break;
-				case Event::EventType::MouseButtonPressed:
-					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME && chessBoard.isOwnMove())
-					{
-						chessBoard.handleLeftClickPressed(event, &window);
-					}
-					if(event.mouseButton.button == Mouse::Button::Left && state == States::MENU)
-						menu.handleLeftClickPressed(event, &window);
-					break;
-				case Event::EventType::MouseButtonReleased:
-					if(event.mouseButton.button == Mouse::Button::Left && state == States::INGAME && chessBoard.isOwnMove())
-					{
-						chessBoard.handleLeftClickReleased(event, &window);
-					}
-					break;
+                default:
+                    break;
+			}
+			switch(state){
+                case States::INGAME:
+                    chessBoard.handleEvent(event, &window);
+                    break;
+                case States::MENU:
+                    menu.handleEvent(event, &window);
+                default:
+                    break;
 			}
 		}
 

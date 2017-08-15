@@ -264,37 +264,49 @@ void ChessBoard::closeGUI()
 	currentGUI = 0;
 }
 
-void ChessBoard::handleLeftClickPressed(Event event, RenderWindow* window)
+void ChessBoard::handleEvent(Event event, RenderWindow* window)
 {
-	switch(currentGUI)
-	{
-		case 0:
-			dragPiece(getFieldForPosition(Mouse::getPosition(*window)));
-			break;
-		case 1:
-			promotionGUI.handleLeftClickPressed(window);
-			break;
+    switch(event.type){
+        case Event::EventType::MouseButtonPressed:
+                if(event.mouseButton.button == Mouse::Button::Left && isOwnMove())
+                {
+                    switch(currentGUI)
+                    {
+                        case 0:
+                            dragPiece(getFieldForPosition(Mouse::getPosition(*window)));
+                            break;
+                        case 1:
+                            promotionGUI.handleLeftClickPressed(window);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            break;
+        case Event::EventType::MouseButtonReleased:
+            if(event.mouseButton.button == Mouse::Button::Left && isOwnMove())
+            {
+                switch(currentGUI)
+                {
+                    case 0:
+                        dropPiece(getFieldForPosition(Mouse::getPosition(*window)));
+                        break;
+                    case 1:
+                        char promotedTo = promotionGUI.handleLeftClickReleased(window);
+                        if(promotedTo != 0)
+                        {
+                            // Handle Promotion
+                            closeGUI();
+                        }
+                        break;
 
-	}
-}
+                }
+            }
+            break;
+        default:
+            break;
 
-void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
-{
-	switch(currentGUI)
-	{
-		case 0:
-			dropPiece(getFieldForPosition(Mouse::getPosition(*window)));
-			break;
-		case 1:
-			char promotedTo = promotionGUI.handleLeftClickReleased(window);
-			if(promotedTo != 0)
-			{
-				// Handle Promotion
-				closeGUI();
-			}
-			break;
-
-	}
+    }
 }
 
 History* ChessBoard::getHistory()

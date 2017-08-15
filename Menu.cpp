@@ -70,19 +70,21 @@ void Menu::render(RenderWindow* window)
 	}
 }
 
-void Menu::handleLeftClickPressed(Event event, RenderWindow* w)
+void Menu::handleEvent(Event event, RenderWindow* window)
 {
-	Vector2i mousePos = Mouse::getPosition(*w);
-	if(clientButton.isInbound(mousePos))
-		sessionType = SessionType::CLIENT;
-	if(hostButton.isInbound(mousePos))
-		sessionType = SessionType::HOST;
-	updateSessionButtons(w->getSize());
-	if(whiteButton.isInbound(mousePos))
-		ownColor = false;
-	if(blackButton.isInbound(mousePos))
-		ownColor = true;
-	updateColorButtons(w->getSize());
+    if(event.mouseButton.button == Mouse::Button::Left){
+        Vector2i mousePos = Mouse::getPosition(*window);
+        if(clientButton.isInbound(mousePos))
+            sessionType = SessionType::CLIENT;
+        if(hostButton.isInbound(mousePos))
+            sessionType = SessionType::HOST;
+        updateSessionButtons(window->getSize());
+        if(whiteButton.isInbound(mousePos))
+            ownColor = false;
+        if(blackButton.isInbound(mousePos))
+            ownColor = true;
+        updateColorButtons(window->getSize());
+    }
 }
 
 void Menu::updateSessionButtons(Vector2u windSize)

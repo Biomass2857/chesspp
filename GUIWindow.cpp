@@ -95,7 +95,9 @@ void GUIWindow::setCentered(bool value)
 
 bool GUIWindow::isInbound(Vector2i pos)
 {
-	if(pos.x >= sprites[0].getPosition().x && pos.y >= sprites[0].getPosition().y && pos.x < sprites[8].getPosition().x && pos.y < sprites[8].getPosition().y)
+    FloatRect bounds0 = sprites[0].getGlobalBounds();
+    FloatRect bounds8 = sprites[8].getGlobalBounds();
+	if(pos.x >= bounds0.left && pos.y >= bounds0.top && pos.x < bounds8.left + bounds8.width && pos.y < bounds8.top + bounds8.height)
 		return true;
 	return false;
 }
