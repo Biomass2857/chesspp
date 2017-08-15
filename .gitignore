@@ -32,3 +32,10 @@
 *.app
 
 *.sh
+
+# Code::Blocks
+bin
+obj
+*.layout
+*.depend
+*.cbp

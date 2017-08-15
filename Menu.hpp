@@ -19,6 +19,7 @@ class Menu
 
 		void render(RenderWindow*);
 
+		void handleEvent(Event, RenderWindow*);
 		void handleLeftClickPressed(Event, RenderWindow*);
 
 	protected:

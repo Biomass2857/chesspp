@@ -43,8 +43,7 @@ class ChessBoard
 		void openGUI(char);
 		void closeGUI();
 
-		void handleLeftClickPressed(Event, RenderWindow*);
-		void handleLeftClickReleased(Event, RenderWindow*);
+		void handleEvent(Event, RenderWindow*);
 
 		History* getHistory();
 
