@@ -17,6 +17,9 @@ class PromotionGUI
 		void render(RenderWindow*);
 		char getPieceForPosition(Vector2i, Vector2u);
 		void handleLeftClickPressed(RenderWindow*);
+		
+		char getCurrentPiece();
+		// dont get it
 		char handleLeftClickReleased(RenderWindow*);
 
 	protected:

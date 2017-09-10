@@ -38,6 +38,8 @@ bool threatened(unsigned int, char*, bool);
 
 bool isMovePossible(unsigned int, char*, Vector2c, Vector2c, History);
 
-void hardWriteToBoard(unsigned int, char*, Vector2c, Vector2c, History&, bool);
+void hardWriteToBoard(unsigned int, char*, Vector2c, Vector2c, History&, bool, char);
+
+bool isTurnPromotion(unsigned int, char*, Vector2c, Vector2c);
 
 #endif

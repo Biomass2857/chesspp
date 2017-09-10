@@ -13,7 +13,7 @@
 using namespace std;
 using namespace sf;
 
-int main()
+int main(int argc, char **argv)
 {
 	States state = States::MENU;
 	NetworkHandler networkHandler;
@@ -31,7 +31,7 @@ int main()
 	
 	// Debug Localhost
 	string ip = "";
-	const unsigned short port = 51001;
+	const unsigned short port = argc > 1 ? atoi(argv[1]) : 51001;
 	
 	TcpListener *einsListener = new TcpListener;
 	if(einsListener->listen(port) == Socket::Error)

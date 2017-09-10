@@ -295,7 +295,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 			if(col != gameHistory.whoHasToMoveNext())
 			{
 				if(gameHistory.whoHasToMoveNext()) cout << "Schwarz ist am zug" << endl; else cout << "Weiß ist am zug" << endl;
-
+				
 				return false;
 			}
 			pieceID = brd[startPos.x][startPos.y];
@@ -341,9 +341,9 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 						}
 						else
 						{
-							if(abs(startPos.x - endPos.x) != 1 || abs(startPos.y - endPos.y) != 1 || brd[endPos.x][endPos.y] <= 7)
+							if(abs(startPos.x - endPos.x) != 1 || endPos.y - startPos.y != 1 || brd[endPos.x][endPos.y] < 7)
 							{
-								cout <<"Der Bauer kann nur schräg schlagen"<< endl;
+								cout <<"Mit dem Bauer wird nur schräg geschlagen"<< endl;
 								return false;
 							}
 						}
@@ -383,9 +383,9 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 						}
 						else
 						{
-							if(abs(startPos.x - endPos.x) != 1 || abs(startPos.x - endPos.x) != 1 || brd[endPos.x][endPos.y] >= 7)
+							if(abs(startPos.x - endPos.x) != 1 || startPos.y - endPos.y != 1 || brd[endPos.x][endPos.y] >= 7)
 							{
-								cout <<"Der Bauer darf nur schräg schlagen"<< endl;
+								cout <<"Mit dem Bauer wird nur schräg geschlagen"<< endl;
 								return false;
 							}
 						}
@@ -730,7 +730,7 @@ bool isMovePossible(unsigned int len, char *board, Vector2c startPos, Vector2c e
 		return false;
 }
 
-void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History &history, bool opponentturn)
+void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c endPos, History &history, bool opponentturn, char promoTo)
 {
 	if(startPos != endPos)
 	{
@@ -753,7 +753,7 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
 					brd[startPos.x][startPos.y] = 0;
 					brd[endPos.x + 1][endPos.y] = brd[startPos.x - 4][7 * history.whoHasToMoveNext()];
-					brd[startPos.x - 4][7 * history.whoHasToMoveNext()] = 0;
+						brd[startPos.x - 4][7 * history.whoHasToMoveNext()] = 0;
 				}
 				else if(startPos.x - endPos.x < 0)
 				{
@@ -765,14 +765,17 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 			}
 			else
 			{
-				brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
+				if(promoTo != 0)
+					brd[endPos.x][endPos.y] = promoTo;
+				else
+					brd[endPos.x][endPos.y] = brd[startPos.x][startPos.y];
 				brd[startPos.x][startPos.y] = 0;
 			}
 		}
 		
 		if(!opponentturn)
 		{
-			Move move = Move(startPos, endPos, *(board + startPos.x * len + startPos.y), 0);
+			Move move = Move(startPos, endPos, *(board + startPos.x * len + startPos.y), promoTo);
 			history.addMove(move);
 			NetworkHandler::getInstance()->sendMove(move, history.getMoveNumber());
 		}
@@ -785,4 +788,38 @@ void hardWriteToBoard(unsigned int len, char *board, Vector2c startPos, Vector2c
 			}
 		}
 	}
+}
+
+bool isTurnPromotion(unsigned int len, char *board, Vector2c startPos, Vector2c endPos)
+{
+	if(startPos != endPos && startPos.x >= 0 && startPos.x < len && startPos.y >= 0 && startPos.y < len && endPos.x >= 0 && endPos.x < len && endPos.y >= 0 && endPos.y < len)
+	{
+		char brd[len][len];
+		for(int dx = 0; dx < len; dx++)
+		{
+			for(int dy = 0; dy < len; dy++)
+			{
+				brd[dx][dy] = *(board + dx * len + dy);
+			}
+		}
+	
+		if(brd[startPos.x][startPos.y] == 1)
+		{
+			if(((brd[endPos.x][endPos.y] > 7 && abs(startPos.x - endPos.x) == 1) || (brd[endPos.x][endPos.y] == 0 && startPos.x == endPos.x)) && endPos.y == len - 1)
+				return true;
+			else
+				return false;
+		}
+		else if(brd[startPos.x][startPos.y] == 8)
+		{
+			if(((brd[endPos.x][endPos.y] < 7 && abs(startPos.x - endPos.x) == 1) || (brd[endPos.x][endPos.y] == 0 && startPos.x == endPos.x)) && endPos.y == 0)
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	else
+		return false;
 }

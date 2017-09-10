@@ -1,7 +1,7 @@
 #include "ChessBoard.hpp"
 #include <iostream>
 
-ChessBoard::ChessBoard(bool col) : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false), ownColor(col)
+ChessBoard::ChessBoard(bool col) : len(8), currentGUI(0), isMovingPiece(false), isDraggingPiece(false), ownColor(col), initPromo(false), promotedTo(0)
 {
 	reset();
 }
@@ -111,7 +111,7 @@ void ChessBoard::handle(Vector2i cursorPos)
 	{
 		if(movePieceClock.getElapsedTime().asMilliseconds() >= 1000)
 		{
-			hardWriteToBoard(len, &board[0][0], movePieceFrom, movePieceTo, history, true);
+			hardWriteToBoard(len, &board[0][0], movePieceFrom, movePieceTo, history, true, lastEnemyMove.newPieceID);
 			history.addMove(lastEnemyMove);
 			isMovingPiece = false;
 			handlePieces();
@@ -219,14 +219,38 @@ void ChessBoard::dropPiece(Vector2c pos)
 {
 	if(isDraggingPiece)
 	{
-		if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
+		if(!initPromo)
 		{
-		//	movePiece(dragPieceInitialPosition, pos);
-			hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history, false);
-			cout <<"Possible."<< endl;
-
-			cout << endl;
+			if(!isTurnPromotion(len, &board[0][0], dragPieceInitialPosition, pos))
+			{
+				cout <<"No Promo"<< endl;
+				if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
+				{
+				//	movePiece(dragPieceInitialPosition, pos);
+					hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history, false, promotedTo);
+				}
+			}
+			else
+			{
+				initPromo = true;
+				cout <<"Promo"<< endl;
+				openGUI(1);
+			}
 		}
+		else
+		{
+			if(promotedTo != 0)
+			{
+				if(isMovePossible(len, &board[0][0], dragPieceInitialPosition, pos, history))
+				{
+				//	movePiece(dragPieceInitialPosition, pos);
+					hardWriteToBoard(len, &board[0][0], dragPieceInitialPosition, pos, history, false, promotedTo);
+				}
+				initPromo = false;
+				promotedTo = 0;
+			}
+		}
+		
 		isDraggingPiece = false;
 		
 		handlePieces();
@@ -278,7 +302,6 @@ void ChessBoard::handleLeftClickPressed(Event event, RenderWindow* window)
 		case 1:
 			promotionGUI.handleLeftClickPressed(window);
 			break;
-
 	}
 }
 
@@ -290,7 +313,7 @@ void ChessBoard::handleLeftClickReleased(Event event, RenderWindow* window)
 			dropPiece(getFieldForPosition(Mouse::getPosition(*window)));
 			break;
 		case 1:
-			char promotedTo = promotionGUI.handleLeftClickReleased(window);
+			promotedTo = promotionGUI.getCurrentPiece();
 			if(promotedTo != 0)
 			{
 				// Handle Promotion

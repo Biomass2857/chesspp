@@ -44,6 +44,11 @@ void PromotionGUI::handleLeftClickPressed(RenderWindow* window)
 	clickPressPiece = getPieceForPosition(Mouse::getPosition(*window), window->getSize());
 }
 
+char PromotionGUI::getCurrentPiece()
+{
+	return clickPressPiece;
+}
+
 char PromotionGUI::handleLeftClickReleased(RenderWindow* window)
 {
 	if(clickPressPiece != 0)

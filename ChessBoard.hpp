@@ -66,7 +66,7 @@ class ChessBoard
 		Vector2c movePieceFrom;
 		Clock movePieceClock;
 		bool isMovingPiece;
-
+		
 		Vector2u windSize;
 
 		Image backgroundImage;
@@ -84,6 +84,9 @@ class ChessBoard
 		PromotionGUI promotionGUI;
 		
 		Move lastEnemyMove;
+		
+		bool initPromo;
+		char promotedTo;
 };
 
 #endif

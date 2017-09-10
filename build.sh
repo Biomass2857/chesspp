@@ -1,7 +1,7 @@
 #!/bin/bash
 # ver: 1.0.5 release
 
-filename="chess.exe"
+filename="chess_exe"
 useC=false
 useCPP=true
 cc_flags=""
